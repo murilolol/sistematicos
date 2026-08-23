@@ -147,6 +147,14 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
   <img src="./screenshots/05-mensalidade.png" alt="Financeiro" width="49%" />
 </p>
 
+<details>
+<summary>Ver o dashboard inteiro (scroll completo, claro e escuro)</summary>
+<p align="center">
+  <img src="./screenshots/dashboard-dark-full.png" alt="Dashboard completo — tema escuro" width="90%" />
+  <img src="./screenshots/dashboard-light-full.png" alt="Dashboard completo — tema claro" width="90%" />
+</p>
+</details>
+
 ### Mobile
 
 <p align="center">
@@ -154,6 +162,13 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
   <img src="./screenshots/07-mobile-dashboard.png" alt="Dashboard em celular" width="24%" />
   <img src="./screenshots/08-mobile-boletim.png" alt="Boletim em celular" width="24%" />
 </p>
+
+<details>
+<summary>Ver o dashboard mobile inteiro (scroll completo)</summary>
+<p align="center">
+  <img src="./screenshots/mobile-dashboard-full.png" alt="Dashboard completo em celular" width="32%" />
+</p>
+</details>
 
 > A sidebar desktop vira navegação inferior (bottom nav) em telas de celular — não é a mesma interface encolhida, é outro layout, pensado para uso de uma mão.
 
