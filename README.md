@@ -52,6 +52,8 @@ O **Sistemáticos** nasceu dessa frustração como aluno. Em vez de mais um sist
 
 > **Nota:** este repositório é uma *vitrine técnica*. O código-fonte do motor de sincronização e automação é proprietário e não é distribuído publicamente.
 
+> A própria plataforma também tem uma versão *ao vivo* deste documento: a página **[Sobre o Projeto](https://sistematicos.site/sobre)**, dentro do portal, reúne visão geral, arquitetura, mapa de API e postura de segurança em abas navegáveis — pensada tanto para aluno curioso quanto para quem só quer confirmar o que é feito com os próprios dados.
+
 ### Sistemáticos vs. portal oficial
 
 | | Portal oficial (JSF) | Sistemáticos |
@@ -72,11 +74,12 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 
 - **Finalidade e minimização** — a senha é usada **apenas para autenticar contra o portal oficial da FEF**, na hora do login, e nunca é enviada para nenhum outro lugar. O Sistemáticos **não tem banco de dados de notas, frequência ou matrícula** — essas informações são sempre lidas ao vivo do portal institucional, nunca armazenadas por aqui.
 - **Segurança e não retenção** — a senha é mantida **cifrada em memória** (nunca em disco, nunca em texto puro) só para permitir que a sessão continue válida enquanto o aluno navega, e é descartada quando a sessão expira ou o servidor reinicia.
-- **Consentimento livre e informado** — o tratamento de dados só ocorre porque o próprio aluno opta, voluntariamente, por inserir suas credenciais e usar a plataforma; o **modo convidado** existe justamente para quem prefere explorar a interface sem fornecer nenhum dado real.
+- **Consentimento livre e informado** — o tratamento de dados só ocorre porque o próprio aluno opta, voluntariamente, por inserir suas credenciais e usar a plataforma; o **modo convidado** existe justamente para quem prefere explorar a interface sem fornecer nenhum dado real. Um banner de cookies, exibido no primeiro acesso, deixa explícita a distinção entre cookies essenciais (login) e opcionais (preferências).
+- **Auditoria com minimização** — cada login grava IP aproximado, cidade/dispositivo/navegador e horário, **nunca a senha** — e esse registro é **sobrescrito a cada novo login do mesmo RA**, em vez de acumular um histórico crescente: existe só o suficiente para investigar um acesso indevido, não para rastrear o aluno ao longo do tempo.
 - **Transparência** — os detalhes técnicos completos de como isso é implementado (criptografia, cookies, expiração) estão documentados e abertos em **[ARCHITECTURE.md](./ARCHITECTURE.md)**, para qualquer pessoa auditar o raciocínio.
 - **Direitos do titular** — dados gerados pelo próprio uso da plataforma (mensagens de chat, tarefas, sugestões) podem ter acesso, correção ou eliminação solicitados diretamente ao autor, a qualquer momento.
 
-> Este README descreve as práticas técnicas em alto nível. Uma Política de Privacidade completa, nos moldes da LGPD, é mantida diretamente dentro da própria plataforma.
+> Este README descreve as práticas técnicas em alto nível. A plataforma mantém, dentro dela mesma, uma **[Política de Privacidade](https://sistematicos.site/privacidade)** e **[Termos de Uso](https://sistematicos.site/termos)** completos, nos moldes da LGPD — vinculados também no rodapé do banner de cookies.
 
 <br>
 
@@ -85,13 +88,16 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 | Área | Descrição |
 | :-- | :-- |
 | **Boletim** | Notas, frequência por disciplina e simulador de médias — descubra quanto falta tirar na próxima prova para passar. |
-| **Horários e cronograma** | Grade semanal por horário, corpo docente responsável e download de planos de ensino em PDF. |
+| **Vida acadêmica** | Horário de aulas, cronograma, matriz curricular, calendário de provas e atividades complementares — tudo lido ao vivo do portal. |
 | **Financeiro** | Mensalidades em aberto e quitadas, boleto e QR Code PIX para pagamento instantâneo. |
-| **Comunicação** | Chat em tempo real da turma/curso e mensagens diretas privadas entre colegas. |
+| **Comunicação** | Chat em tempo real da turma/curso, mensagens diretas privadas entre colegas e central de suporte. |
 | **Classroom** | Feed de materiais e atividades sincronizado com o Google Classroom das disciplinas. |
+| **Hub Acadêmico** | Calculadora de médias, banco de provas antigas, trilha de carreira e networking entre alunos — extensões que rodam em cima dos dados já carregados, sem novas chamadas ao portal. |
+| **Ferramentas** | Gerador de capa no padrão ABNT com autopreenchimento (curso, autor, instituição) e simulador de aprovação. |
 | **Tarefas** | Quadro Kanban pessoal para organizar entregas, trabalhos e provas. |
 | **Avisos e gestão** | Mural de comunicados por curso/semestre, com painel administrativo para representantes de turma. |
-| **Comunidade** | Diretório de estudantes e professores, central de sugestões com votação, e suporte ao vivo. |
+| **Comunidade** | Diretório de estudantes e professores, central de sugestões com votação, e loja da atlética. |
+| **Apoio ao projeto** | Doações voluntárias via PIX, com ranking opcional de apoiadores — mantém a infraestrutura sem cobrar do aluno. |
 | **Interface** | Tema claro/escuro, busca universal (`Ctrl+K`) e instalação como app (PWA) no celular ou computador. |
 
 <br>
@@ -123,6 +129,9 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 
 > ### Achei um bug ou tenho uma ideia — pra onde eu mando?
 > Dentro do próprio portal, use a **Central de Sugestões** — é lida direto pelo autor. Para algo técnico sobre este repositório, abra uma [issue](https://github.com/murilolol/sistematicos/issues).
+
+> ### O Sistemáticos cobra alguma coisa do aluno?
+> Não, o uso da plataforma é **inteiramente gratuito**. Existem duas frentes financeiras opcionais e desacopladas do login: a **Loja da Atlética** (pedidos via WhatsApp, o pagamento não passa pelo Sistemáticos) e **doações voluntárias** via PIX para ajudar a custear a infraestrutura — nenhuma das duas é necessária para usar boletim, horários, chat ou qualquer outro módulo acadêmico.
 
 <br>
 
@@ -193,7 +202,11 @@ Um gostinho do que tem lá — o formato de resposta do login, já sem nenhum da
 
 ## Autoria
 
-Idealizado, desenhado e desenvolvido individualmente por **Murilo Rocha Silva**, estudante de Bacharelado em Sistemas de Informação na UniFEF — sem financiamento externo ou equipe.
+Idealizado, desenhado e desenvolvido **individualmente** por **Murilo Rocha Silva** — 19 anos, programando há 3, cursando o 4º semestre de Sistemas de Informação na UniFEF — sem financiamento externo ou equipe.
+
+[![GitHub](https://img.shields.io/badge/GitHub-murilolol-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/murilolol)
+[![Instagram](https://img.shields.io/badge/Instagram-@muriloodev-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://instagram.com/muriloodev)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-murilodev-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/murilodev)
 
 > © Murilo Rocha Silva. Todos os direitos sobre o design, a arquitetura e o código-fonte são reservados ao autor.
 

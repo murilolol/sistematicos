@@ -359,9 +359,12 @@ socket.emit('new_message', {
 ```
 src/
 ├── pages/         # uma página por rota, lazy-loaded via React Router
+│   ├── Termos.tsx, Privacidade.tsx   # documentos legais reais, servidos em /termos e /privacidade
+│   ├── Hub.tsx                       # calculadora de médias, banco de provas, carreira, rede
+│   └── Ferramentas.tsx               # gerador de capa ABNT, simulador de aprovação
 ├── components/
 │   ├── layout/    # Sidebar, BottomNav, CommandPalette, modais globais
-│   ├── common/    # elementos reutilizáveis entre páginas
+│   ├── common/    # elementos reutilizáveis entre páginas (inclui CookieConsentBanner)
 │   └── ui/        # primitivos shadcn/ui (Radix)
 ├── contexts/      # AuthContext, SocketContext, ThemeContext, NotificationContext
 ├── hooks/ · lib/  # utilitários
@@ -371,6 +374,7 @@ src/
 - **Contextos como fonte única de estado transversal:** `AuthContext` expõe `authenticatedFetch`, que intercepta qualquer `401`, força uma renovação reativa da sessão FEF e só desloga o aluno se a renovação também falhar.
 - **Tailwind CSS v4** com tokens semânticos (`--primary`, `--background`, `--card`) via `@theme inline`, permitindo alternância instantânea de tema sem repintura.
 - **PWA com cache seletivo:** o Service Worker (Workbox, via `vite-plugin-pwa`) tem uma allowlist explícita por regex — só `avisos`, `fef-landing`, notícias e cursos entram no cache (`NetworkFirst`). Boletim, mensalidade e horário nunca são cacheados, para que dados pessoais não sobrevivam num dispositivo compartilhado.
+- **Consentimento de cookies client-side:** `CookieConsentBanner` só decide entre "essenciais" e "todos" e grava a escolha em `localStorage` — não existe cookie de rastreamento de terceiros para consentir em primeiro lugar.
 
 ---
 
@@ -398,6 +402,8 @@ npm start       # sobe o Express, que passa a servir dist/ + API + WebSocket jun
 | Arquivos JSON como "banco" local | SQLite/Postgres | O volume de dados próprios da plataforma (chat, tarefas, avisos) é pequeno e não relacional; não há necessidade de um motor de banco para isso |
 | Scraping ao vivo em vez de espelhar os dados | Sincronizar e cachear notas/frequência em banco próprio | Qualquer cache correria o risco de ficar desatualizado ou divergir do portal oficial — a fonte da verdade é sempre a FEF |
 | Modo convidado 100% client-side | Convidado com sessão real no servidor | Não há necessidade de tocar a FEF para dar um preview da interface a quem ainda não é aluno |
+| Calculadoras do Hub/Ferramentas rodam sobre dados já buscados (`/api/boletim`) | Rota de API dedicada para cada simulação | Simulador de médias e gerador de capa ABNT são só matemática/template em cima do que a tela já carregou — criar uma rota nova por ferramenta seria superfície de API sem necessidade real |
+| Doações via link de checkout de terceiro (InfinitePay) | Processar cartão/PIX diretamente no servidor | O Sistemáticos nunca vê nem guarda dado de pagamento — o servidor só cria o link e escuta o webhook de confirmação, o que também mantém o projeto fora do escopo de conformidade de meios de pagamento |
 
 ---
 
@@ -411,7 +417,7 @@ npm start       # sobe o Express, que passa a servir dist/ + API + WebSocket jun
 | Segredo em repouso | Senha institucional cifrada com AES-256-GCM; chave nunca gravada, derivada em runtime a partir de `SESSION_SECRET` |
 | Persistência de sessão | Nenhuma — em memória, TTL padrão de 12h, varredura a cada 5 min |
 | Modo convidado | Totalmente isolado: usuário fictício client-side, sem cookie de sessão real, sem acesso à FEF |
-| Auditoria | Log de login registra IP/geolocalização/dispositivo — nunca a senha |
+| Auditoria | Cada login grava `{ timestamp, ra, ip, localizacao, dispositivo, navegador, sistemaOperacional }` — **nunca a senha** — e o registro é **sobrescrito** a cada novo login do mesmo RA (não é um histórico que cresce indefinidamente) |
 | Exposição de credenciais da FEF | O cliente nunca recebe `FEFSSID`/`FEFSSIDCHK`; até a foto de perfil passa por um proxy (`/api/proxy/photo`) para não expor a sessão institucional em uma URL de imagem |
 
 ### Quando o limite é excedido
@@ -436,7 +442,7 @@ O Sistemáticos é um **projeto pessoal e acadêmico, sem fins lucrativos**, mas
 | Princípio (art. 6º, LGPD) | Como se reflete na implementação |
 | :-- | :-- |
 | **Finalidade** | Cada dado tratado tem um uso explícito e único: a senha só autentica; o IP/dispositivo só serve à auditoria de login; nada é reaproveitado para outro fim. |
-| **Necessidade / minimização** | Notas, frequência, boletos e horários nunca são persistidos — são buscados ao vivo e descartados após a resposta. Nenhum dado além do estritamente necessário para a sessão é retido. |
+| **Necessidade / minimização** | Notas, frequência, boletos e horários nunca são persistidos — são buscados ao vivo e descartados após a resposta. O registro de auditoria de login guarda só o **último acesso** por RA (sobrescrito a cada login), nunca um histórico acumulado. |
 | **Segurança** | Senha institucional cifrada em repouso (AES-256-GCM), cookie de sessão `httpOnly`/`SameSite`, rate limiting contra força bruta. |
 | **Prevenção e não retenção** | Sessão inteiramente em memória, com TTL curto e varredura periódica — não há um banco de credenciais para vazar. |
 | **Transparência** | Este documento e o [README](./README.md) descrevem publicamente, em detalhe, como os dados são tratados. |
@@ -446,7 +452,7 @@ O Sistemáticos é um **projeto pessoal e acadêmico, sem fins lucrativos**, mas
 
 É importante distinguir os papéis: o **registro acadêmico oficial** (notas, frequência, matrícula) continua sob controle exclusivo da instituição — a FEF é a controladora desses dados, e mantém seu próprio Encarregado de Dados (`lgpd@fef.edu.br`, publicado em [fef.br/instituicao/lgpd](https://fef.br/instituicao/lgpd)). O Sistemáticos **não assume esse papel**: ele apenas intermedeia, a pedido do próprio titular, o acesso a dados que já existem na FEF, e trata localmente somente o que é gerado pelo uso da própria plataforma (sessão, chat, tarefas).
 
-Como projeto pessoal, o Sistemáticos não substitui uma Política de Privacidade formal — que é mantida diretamente na plataforma, voltada ao usuário final. Esta seção documenta, para desenvolvedores, **como** os princípios da lei se traduzem em decisões técnicas concretas.
+A plataforma mantém uma **[Política de Privacidade](https://sistematicos.site/privacidade)** e **[Termos de Uso](https://sistematicos.site/termos)** formais, em rotas próprias (`/privacidade`, `/termos`), voltadas ao usuário final — apresentadas no primeiro acesso via o banner de cookies. Esta seção documenta, para desenvolvedores, **como** os princípios da lei se traduzem em decisões técnicas concretas.
 
 ---
 
