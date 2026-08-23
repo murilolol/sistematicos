@@ -49,7 +49,6 @@ O **Sistemáticos** nasceu dessa frustração como aluno. Em vez de mais um sist
 - **Zero atrito** — notas, faltas, horários, boletos e materiais em uma SPA fluida, sem recarregar página.
 - **Sem duplicação de dados** — cada informação é buscada ao vivo direto do portal institucional; nada de notas desatualizadas em um banco paralelo.
 - **Ecossistema completo** — financeiro com PIX, chat em tempo real, integração com Google Classroom, Kanban de tarefas e uma pequena rede social entre os próprios alunos do curso.
-- **Navegação sob medida** — menu lateral personalizável (o aluno escolhe o que aparece), busca universal por comando (`Ctrl+K`) e layout que se adapta de verdade a celular e tablet, não só encolhe.
 
 > **Nota:** este repositório é uma *vitrine técnica*. O código-fonte do motor de sincronização e automação é proprietário e não é distribuído publicamente.
 
@@ -93,14 +92,13 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 | **Financeiro** | Mensalidades em aberto e quitadas, boleto e QR Code PIX para pagamento instantâneo. |
 | **Comunicação** | Chat em tempo real da turma/curso, mensagens diretas privadas entre colegas e central de suporte. |
 | **Classroom** | Feed de materiais e atividades sincronizado com o Google Classroom das disciplinas. |
-| **Ferramentas** | Monitor de aprovação (quanto falta na P2, calculado em cima do boletim já carregado) e gerador de capa em padrão ABNT com autopreenchimento. |
+| **Hub Acadêmico** | Calculadora de médias, banco de provas antigas, trilha de carreira e networking entre alunos — extensões que rodam em cima dos dados já carregados, sem novas chamadas ao portal. |
+| **Ferramentas** | Gerador de capa no padrão ABNT com autopreenchimento (curso, autor, instituição) e simulador de aprovação. |
 | **Tarefas** | Quadro Kanban pessoal para organizar entregas, trabalhos e provas. |
 | **Avisos e gestão** | Mural de comunicados por curso/semestre, com painel administrativo para representantes de turma. |
-| **Comunidade** | Diretório de estudantes e professores com perfil social (bio, redes, galeria, controle de privacidade por campo), central de sugestões com votação, e loja da atlética. |
+| **Comunidade** | Diretório de estudantes e professores, central de sugestões com votação, e loja da atlética. |
 | **Apoio ao projeto** | Doações voluntárias via PIX, com ranking opcional de apoiadores — mantém a infraestrutura sem cobrar do aluno. |
-| **Interface** | Tema claro/escuro, menu lateral personalizável, busca universal (`Ctrl+K`) e instalação como app (PWA) no celular ou computador. |
-
-> Um **Hub Acadêmico** (simulador de CR, banco de provas, vitrine de vagas e mentoria) já existe desenhado na plataforma, mas ainda está em rollout gradual — a interface está pronta, porém parte do conteúdo hoje é só demonstrativo enquanto os dados reais são conectados.
+| **Interface** | Tema claro/escuro, busca universal (`Ctrl+K`) e instalação como app (PWA) no celular ou computador. |
 
 <br>
 
@@ -139,8 +137,6 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 
 ## Capturas de tela
 
-### Desktop
-
 <p align="center">
   <img src="./screenshots/01-login.png" alt="Login" width="49%" />
   <img src="./screenshots/03-dashboard-light.png" alt="Dashboard" width="49%" />
@@ -148,25 +144,15 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 
 <p align="center">
   <img src="./screenshots/04-boletim.png" alt="Boletim" width="49%" />
-  <img src="./screenshots/08-mensalidade.png" alt="Financeiro" width="49%" />
-</p>
-
-<p align="center">
-  <img src="./screenshots/05-ferramentas.png" alt="Ferramentas" width="49%" />
-  <img src="./screenshots/07-busca-rapida.png" alt="Busca universal (Ctrl+K)" width="49%" />
-</p>
-
-<p align="center">
-  <img src="./screenshots/06-personalizar-menu.png" alt="Personalizar menu lateral" width="49%" />
+  <img src="./screenshots/05-mensalidade.png" alt="Financeiro" width="49%" />
 </p>
 
 ### Mobile
 
 <p align="center">
-  <img src="./screenshots/09-mobile-iphone-login.png" alt="Login em iPhone" width="24%" />
-  <img src="./screenshots/10-mobile-iphone-dashboard.png" alt="Dashboard em iPhone" width="24%" />
-  <img src="./screenshots/11-mobile-android-dashboard.png" alt="Dashboard em Android" width="24%" />
-  <img src="./screenshots/12-mobile-tablet-dashboard.png" alt="Dashboard em tablet" width="24%" />
+  <img src="./screenshots/06-mobile-login.png" alt="Login em celular" width="24%" />
+  <img src="./screenshots/07-mobile-dashboard.png" alt="Dashboard em celular" width="24%" />
+  <img src="./screenshots/08-mobile-boletim.png" alt="Boletim em celular" width="24%" />
 </p>
 
 > A sidebar desktop vira navegação inferior (bottom nav) em telas de celular — não é a mesma interface encolhida, é outro layout, pensado para uso de uma mão.
@@ -178,9 +164,8 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 - **Frontend**
   - React 19 + TypeScript
   - Vite 6
-  - Tailwind CSS v4 + shadcn/ui (Radix / Base UI)
+  - Tailwind CSS v4 + shadcn/ui
   - Framer Motion
-  - Recharts _(gráficos de desempenho)_
 - **Backend**
   - Node.js + Express 5
   - Socket.IO _(tempo real, multiplexado em salas)_
@@ -209,7 +194,7 @@ flowchart LR
     Server <-- "scraping ao vivo" --> FEF
 ```
 
-O documento **[ARCHITECTURE.md](./ARCHITECTURE.md)** é a referência completa para desenvolvedores e curiosos: diagramas de sequência do fluxo de login e da renovação automática de sessão, o adaptador de scraping reaproveitado por toda a camada acadêmica, o mapa completo das quase 80 rotas da API (com exemplos de request/response em JSON), a topologia de salas do Socket.IO e as decisões de arquitetura (e seus trade-offs) por trás de cada escolha.
+O documento **[ARCHITECTURE.md](./ARCHITECTURE.md)** é a referência completa para desenvolvedores e curiosos: diagramas de sequência do fluxo de login e da renovação automática de sessão, o adaptador de scraping reaproveitado por toda a camada acadêmica, o mapa completo das mais de 60 rotas da API (com exemplos de request/response em JSON), a topologia de salas do Socket.IO e as decisões de arquitetura (e seus trade-offs) por trás de cada escolha.
 
 Um gostinho do que tem lá — o formato de resposta do login, já sem nenhum dado da sessão institucional:
 

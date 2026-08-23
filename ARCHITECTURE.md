@@ -92,7 +92,6 @@ Pontos importantes:
 - **Interstitials automáticos:** o portal às vezes intercala modais obrigatórios (comunicados, "altere sua senha") entre o login e a home. O servidor detecta esses formulários pelo `id` e envia o clique de dispensa via o mesmo protocolo `partial/ajax`, em loop, até a página real aparecer (limite de 5 iterações).
 - **Detecção de semestre:** não existe um campo "semestre atual" pronto no portal. O servidor varre os `<select>` de ano/semestre do boletim, identifica o mais antigo disponível e calcula quantos semestres se passaram até hoje.
 - **Modo convidado** não passa por nada disso: é um usuário fictício criado inteiramente no cliente (`loginAsGuest()`), sem cookie de sessão real e sem qualquer contato com a FEF.
-- **Recuperação de senha** (`POST /api/recover-password`) não reimplementa nada por conta própria: o servidor emula o mesmo formulário "esqueci minha senha" do portal oficial (RA, e-mail e data de nascimento), a validação de quem confere ou não os dados acontece inteiramente do lado da FEF.
 
 ### Exemplo: requisição e resposta
 
@@ -273,7 +272,7 @@ O que o frontend efetivamente recebe — HTML nenhum, só dados prontos para ren
 
 ## Mapa de rotas da API
 
-O servidor expõe quase 80 rotas HTTP, agrupadas por domínio:
+O servidor expõe pouco mais de 60 rotas HTTP, agrupadas por domínio:
 
 | Domínio | Rotas principais | Propósito |
 | :-- | :-- | :-- |
@@ -288,9 +287,6 @@ O servidor expõe quase 80 rotas HTTP, agrupadas por domínio:
 | **Sugestões** | `GET/POST/PUT/DELETE /api/public/sugestoes` (+ `/vote`, `/comment`, `/status`) | Mural de ideias com votação e comentários |
 | **Doações** | `POST /api/donations/checkout`, `/webhook`, `GET /verify/:id`, `/stats` | Doações voluntárias via PIX (InfinitePay), com ranking de apoiadores |
 | **Atlética / Classroom** | `GET/POST /api/atletica*`, `GET /api/classroom` | Loja e agenda da atlética, feed de materiais do Classroom |
-| **Perfil social** | `POST /api/public/alunos/like`, `/update`, `/upload` | Curtir perfil de colega, editar bio/redes/galeria/privacidade, upload de foto |
-| **Notificações institucionais** | `GET /api/fef-notifications`, `POST /api/avisos/read` | Espelha os avisos nativos do portal oficial e marca comunicados como lidos |
-| **Administração financeira interna** | `GET /api/payments` | Painel restrito a admins para controle de inscrições pagas em eventos internos do curso (não é o financeiro do aluno — isso é `/api/mensalidade`) |
 | **Infra** | `GET /api/proxy/photo`, `/api/proxy/ping` | Proxy de foto de perfil (evita expor o cookie da FEF ao navegador do aluno) e healthcheck |
 
 Todas as rotas sob `/api/*` (exceto login/logout/session) passam primeiro pelo rate limiter geral e pelo `fefSessionMiddleware` descrito acima.
@@ -364,13 +360,12 @@ socket.emit('new_message', {
 src/
 ├── pages/         # uma página por rota, lazy-loaded via React Router
 │   ├── Termos.tsx, Privacidade.tsx   # documentos legais reais, servidos em /termos e /privacidade
-│   ├── Hub.tsx                       # simulador de CR, banco de provas, carreira, rede — em rollout, não linkado no menu ainda
-│   └── Ferramentas.tsx               # monitor de aprovação (dados reais) + gerador de capa ABNT
+│   ├── Hub.tsx                       # calculadora de médias, banco de provas, carreira, rede
+│   └── Ferramentas.tsx               # gerador de capa ABNT, simulador de aprovação
 ├── components/
-│   ├── layout/    # Sidebar (com personalização), BottomNav, CommandPalette, SidebarCustomizeModal, modais globais
-│   ├── home/      # widgets do dashboard: clima (Open-Meteo), calendário institucional, notícias, atividades pendentes
+│   ├── layout/    # Sidebar, BottomNav, CommandPalette, modais globais
 │   ├── common/    # elementos reutilizáveis entre páginas (inclui CookieConsentBanner)
-│   └── ui/        # primitivos shadcn/ui (Radix / Base UI)
+│   └── ui/        # primitivos shadcn/ui (Radix)
 ├── contexts/      # AuthContext, SocketContext, ThemeContext, NotificationContext
 ├── hooks/ · lib/  # utilitários
 ```
@@ -380,9 +375,6 @@ src/
 - **Tailwind CSS v4** com tokens semânticos (`--primary`, `--background`, `--card`) via `@theme inline`, permitindo alternância instantânea de tema sem repintura.
 - **PWA com cache seletivo:** o Service Worker (Workbox, via `vite-plugin-pwa`) tem uma allowlist explícita por regex — só `avisos`, `fef-landing`, notícias e cursos entram no cache (`NetworkFirst`). Boletim, mensalidade e horário nunca são cacheados, para que dados pessoais não sobrevivam num dispositivo compartilhado.
 - **Consentimento de cookies client-side:** `CookieConsentBanner` só decide entre "essenciais" e "todos" e grava a escolha em `localStorage` — não existe cookie de rastreamento de terceiros para consentir em primeiro lugar.
-- **Navegação personalizável:** a Sidebar é organizada em grupos (ex.: *Vida Acadêmica*, *Social & Comunidade*, grupos restritos a admin); `SidebarCustomizeModal` deixa o aluno esconder grupos ou itens individuais, com a preferência salva por conta. Um `CommandPalette` (`Ctrl+K`) espelha o mesmo mapa de rotas com busca fuzzy, já filtrando por permissão (admin/convidado) antes de listar o comando.
-- **Responsivo por layout, não por escala:** abaixo do breakpoint `lg`, a `Sidebar` fixa dá lugar a um `BottomNav` de navegação inferior — não é a mesma árvore de componentes encolhida, é uma troca deliberada de padrão de navegação para uso de uma mão em celular.
-- **Widgets do dashboard rodam client-side:** o widget de clima consome a API pública do Open-Meteo diretamente do navegador (sem chave, sem passar pelo backend), fixado nas coordenadas de Fernandópolis; o calendário institucional e o painel de atividades pendentes reaproveitam `/api/calendario`, `/api/matriz` e `/api/boletim` já buscados por outras telas em vez de criar endpoints novos.
 
 ---
 
@@ -412,8 +404,6 @@ npm start       # sobe o Express, que passa a servir dist/ + API + WebSocket jun
 | Modo convidado 100% client-side | Convidado com sessão real no servidor | Não há necessidade de tocar a FEF para dar um preview da interface a quem ainda não é aluno |
 | Calculadoras do Hub/Ferramentas rodam sobre dados já buscados (`/api/boletim`) | Rota de API dedicada para cada simulação | Simulador de médias e gerador de capa ABNT são só matemática/template em cima do que a tela já carregou — criar uma rota nova por ferramenta seria superfície de API sem necessidade real |
 | Doações via link de checkout de terceiro (InfinitePay) | Processar cartão/PIX diretamente no servidor | O Sistemáticos nunca vê nem guarda dado de pagamento — o servidor só cria o link e escuta o webhook de confirmação, o que também mantém o projeto fora do escopo de conformidade de meios de pagamento |
-| Widget de clima chama o Open-Meteo direto do navegador | Proxear a chamada pelo próprio backend | API pública, sem chave e sem dado pessoal no payload (só coordenadas fixas da cidade) — um proxy só adicionaria latência sem ganho de segurança |
-| Hub Acadêmico publicado com conteúdo demonstrativo antes de estar 100% ligado a dados reais | Esconder a página até terminar | A interface (design, motion, layout) já reflete a visão final do módulo; o texto deixa claro o que é simulação enquanto os dados reais (banco de provas, vagas) são integrados aos poucos |
 
 ---
 
