@@ -73,11 +73,11 @@ O **Sistemáticos** nasceu dessa frustração como aluno. Em vez de mais um sist
 Pedir para um aluno digitar o RA e a senha institucional em um site que não é o oficial é, com razão, motivo de desconfiança. Por isso, o funcionamento é deliberadamente simples de explicar — e as práticas abaixo seguem, na medida de um projeto pessoal, os princípios da **Lei Geral de Proteção de Dados (LGPD)**:
 
 - **Finalidade e minimização** — a senha é usada **apenas para autenticar contra o portal oficial da FEF**, na hora do login, e nunca é enviada para nenhum outro lugar. O Sistemáticos **não tem banco de dados de notas, frequência ou matrícula** — essas informações são sempre lidas ao vivo do portal institucional, nunca armazenadas por aqui.
-- **Segurança e não retenção** — a senha é mantida **cifrada em memória** (nunca em disco, nunca em texto puro) só para permitir que a sessão continue válida enquanto o aluno navega, e é descartada quando a sessão expira ou o servidor reinicia.
+- **Segurança e não retenção** — a senha nunca é gravada em texto puro: fica cifrada (**AES-256-GCM**) em memória para uso imediato, e também num backup cifrado em disco que só existe para a sessão sobreviver a um restart do servidor — é descartada assim que a sessão expira (TTL de 12h, varredura a cada 5 min) ou o titular faz logout.
 - **Consentimento livre e informado** — o tratamento de dados só ocorre porque o próprio aluno opta, voluntariamente, por inserir suas credenciais e usar a plataforma; o **modo convidado** existe justamente para quem prefere explorar a interface sem fornecer nenhum dado real. Um banner de cookies, exibido no primeiro acesso, deixa explícita a distinção entre cookies essenciais (login) e opcionais (preferências).
 - **Auditoria com minimização** — cada login grava IP aproximado, cidade/dispositivo/navegador e horário, **nunca a senha** — e esse registro é **sobrescrito a cada novo login do mesmo RA**, em vez de acumular um histórico crescente: existe só o suficiente para investigar um acesso indevido, não para rastrear o aluno ao longo do tempo.
 - **Transparência** — os detalhes técnicos completos de como isso é implementado (criptografia, cookies, expiração) estão documentados e abertos em **[ARCHITECTURE.md](./ARCHITECTURE.md)**, para qualquer pessoa auditar o raciocínio.
-- **Direitos do titular** — dados gerados pelo próprio uso da plataforma (mensagens de chat, tarefas, sugestões) podem ter acesso, correção ou eliminação solicitados diretamente ao autor, a qualquer momento.
+- **Direitos do titular** — o próprio aluno pode apagar sua conta a qualquer momento (self-service, dentro da plataforma): perfil, tarefas, lembretes e histórico financeiro são excluídos de fato; mensagens de chat e comentários públicos são anonimizados, não porque a exclusão seja recusada, mas porque apagá-los de verdade quebraria conversas e totais que outras pessoas ainda enxergam.
 
 > Este README descreve as práticas técnicas em alto nível. A plataforma mantém, dentro dela mesma, uma **[Política de Privacidade](https://sistematicos.site/privacidade)** e **[Termos de Uso](https://sistematicos.site/termos)** completos, nos moldes da LGPD — vinculados também no rodapé do banner de cookies.
 
@@ -98,7 +98,7 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
 | **Avisos e gestão** | Mural de comunicados por curso/semestre, com painel administrativo para representantes de turma. |
 | **Comunidade** | Diretório de estudantes e professores, central de sugestões com votação, e loja da atlética. |
 | **Apoio ao projeto** | Doações voluntárias via PIX, com ranking opcional de apoiadores — mantém a infraestrutura sem cobrar do aluno. |
-| **Interface** | Tema claro/escuro, busca universal (`Ctrl+K`) e instalação como app (PWA) no celular ou computador. |
+| **Interface** | Tema claro/escuro, busca universal (`Ctrl+K`), diálogos e notificações no próprio tema da aplicação (sem pop-up nativo do navegador) e instalação como app (PWA) no celular ou computador. |
 
 <br>
 
@@ -172,8 +172,8 @@ Pedir para um aluno digitar o RA e a senha institucional em um site que não é 
   - Cheerio _(parsing/sincronização)_
 - **Sessão e segurança**
   - Cookies `httpOnly`
-  - Sessão criptografada em memória (**AES-256-GCM**)
-  - Zero persistência de credenciais
+  - Sessão criptografada com **AES-256-GCM** (memória + backup em disco)
+  - RA sempre resolvido a partir da sessão — nunca de um campo enviado pelo cliente
 
 <br>
 
@@ -185,7 +185,7 @@ O servidor não guarda o registro acadêmico do aluno — ele mantém apenas uma
 flowchart LR
     Client["Cliente\nReact 19 + PWA"]
     Server["Servidor\nExpress 5 + Socket.IO"]
-    Session[("Sessão em memória")]
+    Session[("Sessão\nmemória + backup cifrado")]
     FEF["Portal institucional\nJSF/PrimeFaces"]
 
     Client <-- "cookie httpOnly" --> Server
@@ -194,7 +194,7 @@ flowchart LR
     Server <-- "scraping ao vivo" --> FEF
 ```
 
-O documento **[ARCHITECTURE.md](./ARCHITECTURE.md)** é a referência completa para desenvolvedores e curiosos: diagramas de sequência do fluxo de login e da renovação automática de sessão, o adaptador de scraping reaproveitado por toda a camada acadêmica, o mapa completo das mais de 60 rotas da API (com exemplos de request/response em JSON), a topologia de salas do Socket.IO e as decisões de arquitetura (e seus trade-offs) por trás de cada escolha.
+O documento **[ARCHITECTURE.md](./ARCHITECTURE.md)** é a referência completa para desenvolvedores e curiosos: diagramas de sequência do fluxo de login e da renovação automática de sessão, o adaptador de scraping reaproveitado por toda a camada acadêmica, a topologia de salas do Socket.IO e as decisões de arquitetura (e seus trade-offs) por trás de cada escolha. O mapa completo das mais de 60 rotas da API — agrupadas por domínio, com o que cada grupo exige de autorização e exemplos de request/response — está em **[docs/api.md](./docs/api.md)**.
 
 Um gostinho do que tem lá — o formato de resposta do login, já sem nenhum dado da sessão institucional:
 

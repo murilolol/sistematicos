@@ -162,7 +162,7 @@ sequenceDiagram
 Duas decisões evitam problemas comuns desse padrão:
 
 - **De-duplicação de refresh em voo.** Um carregamento de página dispara várias chamadas de API em paralelo (dashboard, boletim, horário, avisos...). Sem controle, cada uma notaria a sessão institucional velha ao mesmo tempo e disparia login duplicado contra o portal real — o que o portal real tende a falhar ou limitar. Um `Map` de promises em andamento por `sessionId` garante que só a primeira chamada relogue; as demais aguardam o mesmo resultado.
-- **Sem persistência.** A sessão vive só em `Map` na memória do processo. Um restart do servidor derruba todo mundo — comportamento aceito de propósito, já que a alternativa (persistir credenciais cifradas em disco/Redis) aumentaria a superfície de risco sem necessidade real: a sessão é barata de recriar (é só um login).
+- **Persistência cifrada em disco.** A sessão vive em `Map` na memória para acesso rápido, mas cada registro também é gravado, cifrado (AES-256-GCM), em `server/database/sessions.json` — recarregado e decifrado na inicialização do processo. O desenho original era propositalmente só-memória (a suposição era que a sessão é barata de recriar, então persistir credenciais em outro lugar só aumentaria a superfície de risco sem ganho real). Essa suposição não se sustentou no uso real: um restart do servidor durante desenvolvimento ativo — `nodemon` recarregando após um save, um redeploy — derrubava **todo mundo** de uma vez, mesmo quem tinha marcado "lembrar login", porque a sessão inteira desaparecia junto com o processo. A gravação é best-effort (fire-and-forget) e cobre também `fefssid`/`fefssidchk`, que são credenciais de portador tão sensíveis quanto a senha e merecem a mesma proteção em repouso.
 - **Recuperação reativa no cliente.** Se qualquer chamada autenticada volta `401`, `authenticatedFetch` no frontend força uma renovação (`/api/session/me?reactive=1`) e só então repete a chamada original — sem esperar o timer proativo de 20 minutos.
 
 ### Ciclo de vida da sessão
@@ -272,39 +272,9 @@ O que o frontend efetivamente recebe — HTML nenhum, só dados prontos para ren
 
 ## Mapa de rotas da API
 
-O servidor expõe pouco mais de 60 rotas HTTP, agrupadas por domínio:
+O servidor expõe pouco mais de 60 rotas HTTP, agrupadas por 12 domínios (autenticação, acadêmico, financeiro, portal institucional, comunidade, produtividade, conta, avisos, suporte, sugestões, doações, atlética/classroom, infra). Todas sob `/api/*` (exceto login/logout/session) passam primeiro pelo rate limiter geral e pelo `fefSessionMiddleware` descrito acima.
 
-| Domínio | Rotas principais | Propósito |
-| :-- | :-- | :-- |
-| **Autenticação e sessão** | `POST /api/login`, `/api/login/guest`, `/api/logout`, `GET /api/session/me`, `POST /api/recover-password` | Login real, modo convidado, encerramento de sessão, checagem de sessão ativa, recuperação de senha |
-| **Acadêmico (proxy ao vivo)** | `GET /api/boletim`, `/api/horario-aula`, `/api/calendario`, `/api/matriz`, `/api/atividades(/resumo)`, `/api/nupex`, `/api/cronograma`, `/api/fefsis/aulas/*`, `/api/dashboard/home` | Notas, frequência, horários, matriz curricular, atividades complementares, aulas/materiais e o resumo do dashboard — sempre lidos ao vivo do portal |
-| **Financeiro** | `GET /api/mensalidade`, `POST /api/mensalidade/pix`, `/mensalidade/confirmar`, `/mensalidade/baixar-pdf`, `DELETE /api/mensalidade/:id` | Boletos, PIX dinâmico, confirmação de pagamento e emissão de PDF |
-| **Portal institucional (público)** | `GET /api/fef-landing`, `/api/fef/noticias`, `/api/fef/cursos`, `/api/fef/curso-detalhes`, `/api/fef-institutional` | Notícias, cursos e páginas institucionais da FEF — não exigem sessão de aluno |
-| **Comunidade e social** | `GET/POST /api/messages`, `GET /api/public/alunos`, `/api/direct/conversations`, `POST /api/profile/update` | Chat (histórico via HTTP, tempo real via socket), diretório de estudantes, conversas diretas |
-| **Produtividade pessoal** | `GET/POST/DELETE /api/tasks`, `/api/reminders` | Kanban de tarefas e lembretes por RA |
-| **Avisos e gestão** | `GET/POST/DELETE /api/avisos`, `GET/POST /api/admin/admins`, `GET /api/notifications/active`, `POST /api/system/popup` | Mural de comunicados, gestão de administradores, popups de sistema |
-| **Suporte** | `GET /api/public/suporte/tickets/:ra`, `/suporte/admins`, `/suporte/ticket/:id`, `DELETE /api/admin/suporte/ticket/:id` | Central de atendimento (histórico via HTTP; conversa ao vivo via socket) |
-| **Sugestões** | `GET/POST/PUT/DELETE /api/public/sugestoes` (+ `/vote`, `/comment`, `/status`) | Mural de ideias com votação e comentários |
-| **Doações** | `POST /api/donations/checkout`, `/webhook`, `GET /verify/:id`, `/stats` | Doações voluntárias via PIX (InfinitePay), com ranking de apoiadores |
-| **Atlética / Classroom** | `GET/POST /api/atletica*`, `GET /api/classroom` | Loja e agenda da atlética, feed de materiais do Classroom |
-| **Infra** | `GET /api/proxy/photo`, `/api/proxy/ping` | Proxy de foto de perfil (evita expor o cookie da FEF ao navegador do aluno) e healthcheck |
-
-Todas as rotas sob `/api/*` (exceto login/logout/session) passam primeiro pelo rate limiter geral e pelo `fefSessionMiddleware` descrito acima.
-
-### Experimente: uma rota pública
-
-`GET /api/fef/cursos` não exige sessão — é só um espelho dos cursos listados no site institucional, então dá para testar direto:
-
-```bash
-curl https://sistematicos.site/api/fef/cursos
-```
-
-```json
-[
-  { "title": "Administração", "url": "https://fef.br/graduacao/administracao", "icon": "https://fef.br/icons/adm.svg" },
-  { "title": "Sistemas de Informação", "url": "https://fef.br/graduacao/sistemas-de-informacao", "icon": "https://fef.br/icons/si.svg" }
-]
-```
+A referência completa — tabela por domínio, o que cada grupo exige de autorização (sessão / dono-ou-admin / admin / pública) e exemplos de request/response — está em **[docs/api.md](../docs/api.md)**, para não duplicar essa tabela em dois lugares e ela sair de sincronia.
 
 ---
 
@@ -366,13 +336,15 @@ src/
 │   ├── layout/    # Sidebar, BottomNav, CommandPalette, modais globais
 │   ├── common/    # elementos reutilizáveis entre páginas (inclui CookieConsentBanner)
 │   └── ui/        # primitivos shadcn/ui (Radix)
-├── contexts/      # AuthContext, SocketContext, ThemeContext, NotificationContext
+├── contexts/      # AuthContext, SocketContext, ThemeContext, NotificationContext, ConfirmContext, ToastContext
 ├── hooks/ · lib/  # utilitários
 ```
 
 - **Roteamento em três camadas** (`App.tsx`): rotas públicas de convidado, rotas que exigem sessão de aluno válida, e um grupo restrito a permissões administrativas — todas resolvidas antes do primeiro render da página.
 - **Contextos como fonte única de estado transversal:** `AuthContext` expõe `authenticatedFetch`, que intercepta qualquer `401`, força uma renovação reativa da sessão FEF e só desloga o aluno se a renovação também falhar.
+- **Diálogos e feedback sem `window.confirm`/`window.alert`:** `ConfirmContext` (`useConfirm()`, devolve uma `Promise<boolean>`) e `ToastContext` (`useToast().success/error/info`) substituem os diálogos nativos do navegador por componentes React animados (Framer Motion) no tema da aplicação — nativos bloqueiam a thread principal e não podem ser estilizados, o que quebra a experiência num app que já é todo animado.
 - **Tailwind CSS v4** com tokens semânticos (`--primary`, `--background`, `--card`) via `@theme inline`, permitindo alternância instantânea de tema sem repintura.
+- **`position: fixed` e a armadilha do `transform`:** um modal em tela cheia precisa ser filho, na cadeia de ancestrais, de um elemento sem `transform` aplicado — mesmo uma matriz identidade (`translate3d(0,0,0)`, usada aqui como dica de aceleração de hardware) muda o *containing block* de qualquer `position: fixed` descendente, do jeito que a especificação CSS define. Isso já causou um bug real neste projeto: com a otimização de GPU ligada por padrão em `<main>`/`<aside>`, todo modal em tela cheia (incluindo o de pagamento PIX) media e centralizava contra a altura *do conteúdo rolável da página*, não contra o viewport — corrigido restringindo a otimização a elementos-folha (`.card-base`, `.glass-card`) que nunca hospedam modais descendentes.
 - **PWA com cache seletivo:** o Service Worker (Workbox, via `vite-plugin-pwa`) tem uma allowlist explícita por regex — só `avisos`, `fef-landing`, notícias e cursos entram no cache (`NetworkFirst`). Boletim, mensalidade e horário nunca são cacheados, para que dados pessoais não sobrevivam num dispositivo compartilhado.
 - **Consentimento de cookies client-side:** `CookieConsentBanner` só decide entre "essenciais" e "todos" e grava a escolha em `localStorage` — não existe cookie de rastreamento de terceiros para consentir em primeiro lugar.
 
@@ -397,7 +369,7 @@ npm start       # sobe o Express, que passa a servir dist/ + API + WebSocket jun
 
 | Decisão | Alternativa considerada | Por que essa escolha |
 | :-- | :-- | :-- |
-| Sessão em `Map` na memória do processo | Redis / banco relacional | A sessão é barata de recriar (é só refazer o login); persistir credenciais cifradas em outro lugar só aumentaria a superfície de risco sem ganho real de disponibilidade |
+| Sessão em `Map` na memória, com backup cifrado em JSON local | Redis / banco relacional | A sessão é barata de recriar (é só refazer o login), mas descartá-la a cada restart do processo se provou custoso demais na prática — um backup cifrado local resolve isso sem a complexidade operacional de rodar um serviço externo (Redis) para um projeto mantido por uma pessoa só |
 | Um processo Node servindo API + WS + SPA | Frontend e backend em hosts/serviços separados | Simplicidade operacional para um projeto mantido por uma pessoa só, sem equipe de infra |
 | Arquivos JSON como "banco" local | SQLite/Postgres | O volume de dados próprios da plataforma (chat, tarefas, avisos) é pequeno e não relacional; não há necessidade de um motor de banco para isso |
 | Scraping ao vivo em vez de espelhar os dados | Sincronizar e cachear notas/frequência em banco próprio | Qualquer cache correria o risco de ficar desatualizado ou divergir do portal oficial — a fonte da verdade é sempre a FEF |
@@ -415,10 +387,40 @@ npm start       # sobe o Express, que passa a servir dist/ + API + WebSocket jun
 | Rate limiting geral de API | 300 requisições / min por IP |
 | Cookie de sessão | `httpOnly`, `SameSite=Lax`, `Secure` em produção |
 | Segredo em repouso | Senha institucional cifrada com AES-256-GCM; chave nunca gravada, derivada em runtime a partir de `SESSION_SECRET` |
-| Persistência de sessão | Nenhuma — em memória, TTL padrão de 12h, varredura a cada 5 min |
+| Persistência de sessão | Em memória (acesso) + backup cifrado em disco (AES-256-GCM, sobrevive a restart); TTL padrão de 12h, varredura a cada 5 min |
 | Modo convidado | Totalmente isolado: usuário fictício client-side, sem cookie de sessão real, sem acesso à FEF |
 | Auditoria | Cada login grava `{ timestamp, ra, ip, localizacao, dispositivo, navegador, sistemaOperacional }` — **nunca a senha** — e o registro é **sobrescrito** a cada novo login do mesmo RA (não é um histórico que cresce indefinidamente) |
 | Exposição de credenciais da FEF | O cliente nunca recebe `FEFSSID`/`FEFSSIDCHK`; até a foto de perfil passa por um proxy (`/api/proxy/photo`) para não expor a sessão institucional em uma URL de imagem |
+| Autorização por identidade de sessão | Toda rota/handler que lê ou altera dado por RA usa o RA **derivado do cookie de sessão**, nunca um `ra` vindo do corpo/query da requisição — ver seção abaixo |
+
+### Autorização: o RA vem da sessão, nunca do cliente
+
+Um erro comum em APIs que identificam o usuário por um campo de negócio (aqui, o RA) é confiar num `req.body.ra` ou `req.query.ra` enviado pelo próprio cliente — o que permite a qualquer usuário autenticado forjar esse campo e ler ou alterar dado de **outro** RA. O middleware de sessão resolve isso na entrada, uma vez, e todo o resto do código depende só dele:
+
+```js
+const getAuthRa = (req) => req.fefSession?.ra || null;
+
+// Rejeita a menos que exista uma sessão válida — nunca lê req.body.ra/req.query.ra.
+const requireAuth = (req, res, next) => {
+  const ra = getAuthRa(req);
+  if (!ra) return res.status(401).json({ error: 'Autenticação necessária' });
+  req.authRa = ra;
+  next();
+};
+
+// Além de autenticado, o RA precisa ser o dono do recurso OU um admin.
+const requireOwnRaOrAdmin = (extractTargetRa) => (req, res, next) => {
+  const ra = getAuthRa(req);
+  const targetRa = extractTargetRa(req);
+  if (!ra || !targetRa || (ra !== String(targetRa) && !ADMIN_RAS.includes(ra))) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+  req.authRa = ra;
+  next();
+};
+```
+
+O mesmo princípio se aplica ao Socket.IO: `socket.authRa` é resolvido **uma vez**, na conexão, a partir do cookie `sistematicos_sid` do handshake — nunca de um campo enviado no payload do evento. Hoje isso protege **26 rotas HTTP** com `requireAuth`, **9** restritas a administradores (`requireAdmin`), **5** rotas de "dono do recurso ou admin" (`requireOwnRaOrAdmin`) e **25 pontos** de uso de `socket.authRa` nos handlers de tempo real (chat, DMs, suporte, presença, doações).
 
 ### Quando o limite é excedido
 
@@ -444,9 +446,9 @@ O Sistemáticos é um **projeto pessoal e acadêmico, sem fins lucrativos**, mas
 | **Finalidade** | Cada dado tratado tem um uso explícito e único: a senha só autentica; o IP/dispositivo só serve à auditoria de login; nada é reaproveitado para outro fim. |
 | **Necessidade / minimização** | Notas, frequência, boletos e horários nunca são persistidos — são buscados ao vivo e descartados após a resposta. O registro de auditoria de login guarda só o **último acesso** por RA (sobrescrito a cada login), nunca um histórico acumulado. |
 | **Segurança** | Senha institucional cifrada em repouso (AES-256-GCM), cookie de sessão `httpOnly`/`SameSite`, rate limiting contra força bruta. |
-| **Prevenção e não retenção** | Sessão inteiramente em memória, com TTL curto e varredura periódica — não há um banco de credenciais para vazar. |
+| **Prevenção e não retenção** | Sessão com TTL curto e varredura periódica; o backup em disco existe só para sobreviver a um restart do servidor, é cifrado (AES-256-GCM) por inteiro — não apenas a senha — e nunca em texto puro. |
 | **Transparência** | Este documento e o [README](./README.md) descrevem publicamente, em detalhe, como os dados são tratados. |
-| **Livre acesso e eliminação** | O titular pode solicitar ao autor a exclusão de qualquer dado gerado pelo próprio uso da plataforma (mensagens, tarefas, sugestões) a qualquer momento. |
+| **Livre acesso e eliminação** | Self-service via `DELETE /api/account`: apaga de fato perfil, tarefas, lembretes e histórico de pagamentos/login do RA; anonimiza (em vez de apagar) mensagens de chat, comentários e histórico público de doações, pois deletar essas linhas quebraria conversas e totais agregados de que outras pessoas dependem — respaldado pelo art. 16 da LGPD, que permite anonimização quando a exclusão integral prejudica interesse legítimo de terceiros. |
 
 ### Quem é o controlador de quê
 
