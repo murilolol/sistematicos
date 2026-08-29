@@ -272,15 +272,19 @@
   /* ---------- module grid ---------- */
   .grid-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
   }
+  @media (max-width: 900px) { .grid-cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .grid-cards { grid-template-columns: 1fr; } }
   .card {
     background: var(--panel);
     border: 1px solid var(--panel-border);
     border-radius: var(--radius-sm);
-    padding: 22px;
+    padding: 24px;
+    transition: border-color 0.2s, background 0.2s;
   }
+  .card:hover { border-color: rgba(32,178,170,0.4); background: #1a1a1e; }
   .card h3 { margin-bottom: 8px; font-style: normal; text-transform: none; letter-spacing: 0; }
   .card p { margin: 0; color: var(--muted); font-size: 0.92rem; }
 
@@ -551,7 +555,10 @@
       <div class="card"><h3>Hub acadêmico</h3><p>Calculadora de médias, banco de provas, carreira e networking.</p></div>
       <div class="card"><h3>Ferramentas</h3><p>Gerador de capa ABNT e simulador de aprovação.</p></div>
       <div class="card"><h3>Tarefas</h3><p>Kanban pessoal para organizar entregas e provas.</p></div>
+      <div class="card"><h3>Avisos e gestão</h3><p>Mural de comunicados por curso/semestre, com painel para representantes de turma.</p></div>
       <div class="card"><h3>Comunidade</h3><p>Diretório de estudantes/professores e sugestões com votação.</p></div>
+      <div class="card"><h3>Apoio ao projeto</h3><p>Doações voluntárias via PIX, com ranking opcional de apoiadores.</p></div>
+      <div class="card"><h3>Interface</h3><p>Tema claro/escuro, busca universal (Ctrl+K) e instalação como app (PWA).</p></div>
     </div>
   </div>
   </section>
