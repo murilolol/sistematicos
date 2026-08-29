@@ -291,6 +291,120 @@
   </section>
 
   <section style="padding-top:0;">
+    <h2>Respostas por domínio</h2>
+    <p class="lede">Um exemplo real de cada grupo de rotas — financeiro, produtividade, comunidade, doações e tempo real.</p>
+    <div class="grid-2">
+      <div class="code-card">
+        <div class="code-head"><span>GET /api/mensalidade</span><span>json</span></div>
+        <pre><code class="language-json">{
+  "historico": [
+    {
+      "id": "mens_2026_09",
+      "mes": "09", "ano": "2026",
+      "valorOriginal": "R$ 1.530,92",
+      "valorComDesconto": "R$ 765,46",
+      "vencimento": "2026-09-08",
+      "status": "Pendente"
+    }
+  ],
+  "totalInvestido": "R$ 3.827,30",
+  "pendentes": 1
+}</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>GET /api/tasks/:ra</span><span>json</span></div>
+        <pre><code class="language-json">[
+  {
+    "id": "task_8f2a1",
+    "ra": "125314106669",
+    "title": "Entregar trabalho de BD",
+    "status": "todo",
+    "createdAt": "2026-08-20T14:03:00.000Z"
+  },
+  {
+    "id": "task_c91de",
+    "ra": "125314106669",
+    "title": "Revisar slides do seminário",
+    "status": "in_progress"
+  }
+]</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>GET /sugestoes</span><span>json</span></div>
+        <pre><code class="language-json">[
+  {
+    "id": "sug_142",
+    "autorRa": "125314106669",
+    "autorNome": "Murilo Rocha Silva",
+    "titulo": "Modo escuro automático por horário",
+    "descricao": "Alternar tema sozinho ao anoitecer.",
+    "votos": 14,
+    "status": "em_analise",
+    "comentarios": []
+  }
+]</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>GET /donations/stats</span><span>json</span></div>
+        <pre><code class="language-json">{
+  "totalArrecadado": "R$ 412,00",
+  "totalApoiadores": 9,
+  "ranking": [
+    { "nome": "Anônimo", "valor": "R$ 100,00", "isAnonymous": true },
+    { "nome": "Murilo R.", "valor": "R$ 50,00", "isAnonymous": false }
+  ]
+}</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>GET /public/alunos</span><span>json</span></div>
+        <pre><code class="language-json">[
+  {
+    "ra": "125314106669",
+    "nome": "Murilo Rocha Silva",
+    "curso": "Sistemas de Informação",
+    "semestre": "4º",
+    "foto": "/uploads/125314106669/foto.webp",
+    "visible": true
+  }
+]</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>message_received</span><span>json</span></div>
+        <pre><code class="language-json">{
+  "id": 1755882345123,
+  "username": "125314106669",
+  "fullName": "Murilo Rocha Silva",
+  "content": "Alguém tem o slide da aula de hoje?",
+  "room": "Sistemas de Informação",
+  "timestamp": "2026-08-29T19:32:25.123Z",
+  "admin": false
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <h2>Excluindo uma conta (LGPD)</h2>
+    <p class="lede">O que <code>DELETE /api/account</code> apaga de fato versus o que só anonimiza — e por quê (art. 16 da LGPD).</p>
+    <div class="grid-2">
+      <div class="code-card">
+        <div class="code-head"><span>request</span><span>bash</span></div>
+        <pre><code class="language-bash">curl -X DELETE https://sistematicos.site/api/account \
+  -H "Cookie: sistematicos_sid=..." \
+  -H "Content-Type: application/json"</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>resposta · 200 OK</span><span>json</span></div>
+        <pre><code class="language-json">{
+  "message": "Conta excluída com sucesso",
+  "removido": ["perfil", "tarefas", "lembretes", "mensalidades", "logins"],
+  "anonimizado": ["mensagens", "comentarios", "doacoes"]
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
     <h2>Chamando a API</h2>
     <p class="lede">A única rota segura para testar sem sessão é a pública. Em Python, TypeScript ou cURL, a chamada é a mesma coisa: um <code>GET</code> comum.</p>
     <div class="grid-2">
