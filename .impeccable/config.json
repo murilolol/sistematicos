@@ -38,6 +38,42 @@
         ],
         "createdAt": "2026-08-29T18:29:12.667Z",
         "reason": "Agent: the close 7-12px sizes belong to the diagram-design skill's own dense mono type ramp for diagram labels (eyebrow/sublabel/arrow-label), not page body copy hierarchy"
+      },
+      {
+        "rule": "hero-eyebrow-chip",
+        "value": "*",
+        "files": [
+          "site/api.html"
+        ],
+        "createdAt": "2026-08-29T18:40:52.013Z",
+        "reason": "Agent: same eyebrow-label motif already established across site/index.html and site/diagramas.html, reused for visual consistency across the mini-site's pages"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "site/api.html"
+        ],
+        "createdAt": "2026-08-29T18:40:52.127Z",
+        "reason": "Agent: matches the real Sistematicos app's own font-family (src/index.css), already used identically across the mini-site"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist mono",
+        "files": [
+          "site/api.html"
+        ],
+        "createdAt": "2026-08-29T18:40:52.247Z",
+        "reason": "Agent: Geist Mono used for route/code labels for the same reasons as site/diagramas.html"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "site/api.html"
+        ],
+        "createdAt": "2026-08-29T18:40:52.360Z",
+        "reason": "Agent: close 11-13px sizes belong to the dense table/code-label type scale (method chips, table headers, code captions), not page body hierarchy"
       }
     ]
   }
