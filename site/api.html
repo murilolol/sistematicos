@@ -50,6 +50,8 @@
   .route-table th { font-family:var(--font-mono); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); font-weight:500; }
   .route-table td { font-size:0.86rem; }
   .route-table code { font-family:var(--font-mono); font-size:0.82rem; }
+  .route-table tr.domain-row td { padding:20px 14px 8px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); border-bottom:1px solid rgba(32,178,170,0.25); }
+  .route-table tr.domain-row:first-child td { padding-top:8px; }
   .method { font-family:var(--font-mono); font-size:11px; font-weight:700; padding:2px 8px; border-radius:5px; letter-spacing:0.04em; }
   .m-get { color:var(--get); background:rgba(52,211,153,0.12); }
   .m-post { color:var(--post); background:rgba(240,180,41,0.12); }
@@ -100,23 +102,143 @@
   <section style="padding-bottom:24px;">
     <div class="eyebrow">Referência da API</div>
     <h1>Rotas, exemplos<br>e o padrão de autorização.</h1>
-    <p class="lede">A versão navegável de <a href="../docs/api.md" target="_blank" rel="noopener">docs/api.md</a> — mesmas 60+ rotas, mesma regra de autorização, agora com exemplos de código de verdade em três linguagens.</p>
+    <p class="lede">A versão navegável e completa de <a href="../docs/api.md" target="_blank" rel="noopener">docs/api.md</a> — as 80 rotas HTTP e os 22 eventos de Socket.IO do servidor, mesma regra de autorização por grupo, com exemplos de código de verdade em três linguagens.</p>
   </section>
 
   <section style="padding-top:0;">
-    <h2>Mapa de rotas (recorte)</h2>
-    <p class="lede">Autorização não é por rota — é um middleware aplicado uma vez na entrada. "Sessão" basta um cookie válido; "Dono ou admin" também confere posse do recurso; "Admin" restringe a <code>ADMIN_RAS</code>; "Pública" não exige nada.</p>
+    <h2>Mapa de rotas — as 80, completas</h2>
+    <p class="lede">Autorização não é por rota — é um middleware aplicado uma vez na entrada. "Sessão" basta um cookie válido; "Dono ou admin" também confere posse do recurso; "Admin" restringe a <code>ADMIN_RAS</code>; "Pública" não exige nada. <strong style="color:var(--ink)">Sessão (implícita)*</strong> marca rotas acadêmicas sem o middleware <code>requireAuth</code> explícito, mas que dependem de <code>ssid</code>/<code>ssidchk</code> resolvidos pelo <code>fefSessionMiddleware</code> — sem sessão, a chamada ao portal falha adiante, só sem o 401 limpo.</p>
     <div style="overflow-x:auto;">
     <table class="route-table">
       <thead><tr><th>Método</th><th>Rota</th><th>Autorização</th><th>Propósito</th></tr></thead>
       <tbody>
-        <tr><td><span class="method m-post">POST</span></td><td><code>/api/login</code></td><td class="auth-chip">Pública</td><td>Login real contra o portal FEF</td></tr>
-        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fef/cursos</code></td><td class="auth-chip">Pública</td><td>Espelho dos cursos do site institucional</td></tr>
-        <tr><td><span class="method m-get">GET</span></td><td><code>/api/boletim</code></td><td class="auth-chip">Sessão</td><td>Notas e frequência, ao vivo</td></tr>
-        <tr><td><span class="method m-post">POST</span></td><td><code>/api/mensalidade/pix</code></td><td class="auth-chip">Sessão</td><td>Gera QR Code PIX dinâmico</td></tr>
-        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/tasks/:id</code></td><td class="auth-chip">Dono ou admin</td><td>Apaga uma tarefa do Kanban pessoal</td></tr>
-        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/account</code></td><td class="auth-chip">Sessão (própria conta)</td><td>Exclusão/anonimização LGPD self-service</td></tr>
-        <tr><td><span class="method m-post">POST</span></td><td><code>/api/admin/admins</code></td><td class="auth-chip">Admin</td><td>Gestão de administradores da plataforma</td></tr>
+      <tr class="domain-row"><td colspan="4">Autenticação e sessão</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/login</code></td><td class="auth-chip">Pública</td><td>Login real contra o portal FEF (rate limited: 10/15min por IP)</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/login/guest</code></td><td class="auth-chip">Pública</td><td>Ativa o modo convidado (cliente-side, sem sessão real)</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/logout</code></td><td class="auth-chip">Pública</td><td>Encerra a sessão ativa</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/session/me</code></td><td class="auth-chip">Pública</td><td>Checa se existe sessão ativa e devolve o perfil</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/recover-password</code></td><td class="auth-chip">Pública</td><td>Recuperação de senha institucional</td></tr>
+      <tr class="domain-row"><td colspan="4">Acadêmico (ao vivo)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/boletim</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Notas e frequência por disciplina</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/horario-aula</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Horário de aulas da semana</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/calendario</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Calendário de provas e eventos</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/atividades</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Atividades complementares registradas</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/atividades/resumo</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Resumo/contagem de horas de atividades</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/nupex</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Banco de provas antigas (NUPEX)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/matriz</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Matriz curricular do curso</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/dashboard/home</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Resumo agregado para o dashboard inicial</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/cronograma</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Cronograma de aulas por disciplina</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/cronograma/baixar-pdf</code></td><td class="auth-chip">Sessão</td><td>Gera PDF do cronograma</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fefsis/aulas</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Feed do Google Classroom, ao vivo</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/fefsis/aulas/changeselector</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Troca o filtro de disciplina do Classroom</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/fefsis/aulas/select</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Seleciona um item/atividade do Classroom</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/fefsis/aulas/files</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Lista arquivos de uma atividade</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/fefsis/aulas/download-arquivo</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Baixa um arquivo de atividade</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/fefsis/aulas/view-arquivo</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Abre um arquivo de atividade para visualização</td></tr>
+      <tr class="domain-row"><td colspan="4">Financeiro</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/mensalidade</code></td><td class="auth-chip">Sessão</td><td>Boletos e histórico de pagamentos</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/mensalidade/pix</code></td><td class="auth-chip">Sessão (implícita)*</td><td>Gera QR Code PIX dinâmico para o boleto atual</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/mensalidade/confirmar</code></td><td class="auth-chip">Sessão</td><td>Confirma pagamento manual (upload de comprovante)</td></tr>
+        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/mensalidade/:id</code></td><td class="auth-chip">Sessão</td><td>Exclui um registro de pagamento manual</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/mensalidade/baixar-pdf</code></td><td class="auth-chip">Sessão</td><td>Emite o PDF do boleto</td></tr>
+      <tr class="domain-row"><td colspan="4">Portal institucional (público)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fef-landing</code></td><td class="auth-chip">Pública</td><td>Conteúdo da página inicial institucional</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fef/noticias</code></td><td class="auth-chip">Pública</td><td>Notícias do site institucional</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fef/cursos</code></td><td class="auth-chip">Pública</td><td>Lista de cursos oferecidos</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fef/curso-detalhes</code></td><td class="auth-chip">Pública</td><td>Detalhe de um curso específico</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fef-institutional</code></td><td class="auth-chip">Pública</td><td>Páginas institucionais diversas (sobre, história etc.)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/fef-notifications</code></td><td class="auth-chip">Pública</td><td>Espelha as notificações nativas do portal oficial</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/avisos/read</code></td><td class="auth-chip">Pública</td><td>Marca um comunicado do portal oficial como lido</td></tr>
+      <tr class="domain-row"><td colspan="4">Comunidade e social</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/messages</code></td><td class="auth-chip">Sessão</td><td>Histórico do chat da sala atual</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/messages</code></td><td class="auth-chip">Sessão</td><td>Envia mensagem (texto ou anexo) — tempo real via socket</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/public/alunos</code></td><td class="auth-chip">Pública</td><td>Diretório público de estudantes</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/alunos/upload</code></td><td class="auth-chip">Sessão</td><td>Upload de foto de perfil</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/alunos/like</code></td><td class="auth-chip">Sessão</td><td>Curte o perfil de outro aluno</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/alunos/update</code></td><td class="auth-chip">Dono ou admin</td><td>Atualiza os próprios dados no diretório</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/profile/update</code></td><td class="auth-chip">Dono ou admin</td><td>Atualiza o próprio perfil (nome, curso, foto)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/direct/conversations</code></td><td class="auth-chip">Sessão</td><td>Lista as conversas diretas do usuário</td></tr>
+      <tr class="domain-row"><td colspan="4">Produtividade pessoal</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/reminders/:ra</code></td><td class="auth-chip">Dono ou admin</td><td>Lembretes pessoais do RA</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/reminders</code></td><td class="auth-chip">Sessão</td><td>Cria um lembrete</td></tr>
+        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/reminders/:id</code></td><td class="auth-chip">Sessão</td><td>Apaga um lembrete</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/tasks/:ra</code></td><td class="auth-chip">Dono ou admin</td><td>Tarefas do quadro Kanban do RA</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/tasks</code></td><td class="auth-chip">Sessão</td><td>Cria uma tarefa</td></tr>
+        <tr><td><span class="method m-post">PATCH</span></td><td><code>/api/tasks/:id</code></td><td class="auth-chip">Sessão</td><td>Atualiza uma tarefa (allowlist de campos)</td></tr>
+        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/tasks/:id</code></td><td class="auth-chip">Sessão</td><td>Apaga uma tarefa</td></tr>
+      <tr class="domain-row"><td colspan="4">Conta</td></tr>
+        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/account</code></td><td class="auth-chip">Sessão</td><td>Exclusão/anonimização de conta (LGPD self-service)</td></tr>
+      <tr class="domain-row"><td colspan="4">Avisos e gestão</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/avisos</code></td><td class="auth-chip">Pública</td><td>Mural de comunicados (dados locais)</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/avisos</code></td><td class="auth-chip">Admin</td><td>Cria um comunicado</td></tr>
+        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/avisos/:id</code></td><td class="auth-chip">Admin</td><td>Remove um comunicado</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/notifications/active</code></td><td class="auth-chip">Pública</td><td>Popups/avisos de sistema ativos no momento</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/system/popup</code></td><td class="auth-chip">Admin</td><td>Cria um popup de sistema</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/admin/admins</code></td><td class="auth-chip">Admin</td><td>Lista administradores da plataforma</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/admin/admins</code></td><td class="auth-chip">Admin</td><td>Adiciona/remove um administrador</td></tr>
+      <tr class="domain-row"><td colspan="4">Suporte</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/public/suporte/tickets/:ra</code></td><td class="auth-chip">Dono ou admin</td><td>Histórico de chamados do RA</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/public/suporte/admins</code></td><td class="auth-chip">Sessão</td><td>Lista atendentes disponíveis</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/public/suporte/ticket/:id</code></td><td class="auth-chip">Pública</td><td>Detalhe de um chamado específico</td></tr>
+        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/admin/suporte/ticket/:id</code></td><td class="auth-chip">Admin</td><td>Apaga um chamado (moderação)</td></tr>
+      <tr class="domain-row"><td colspan="4">Sugestões</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/public/sugestoes</code></td><td class="auth-chip">Pública</td><td>Mural de sugestões com votos</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/sugestoes</code></td><td class="auth-chip">Sessão</td><td>Cria uma sugestão</td></tr>
+        <tr><td><span class="method m-post">PUT</span></td><td><code>/api/public/sugestoes</code></td><td class="auth-chip">Sessão</td><td>Edita uma sugestão própria</td></tr>
+        <tr><td><span class="method m-delete">DELETE</span></td><td><code>/api/public/sugestoes/:id</code></td><td class="auth-chip">Sessão</td><td>Apaga uma sugestão</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/sugestoes/vote</code></td><td class="auth-chip">Sessão</td><td>Vota numa sugestão</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/sugestoes/comment</code></td><td class="auth-chip">Sessão</td><td>Comenta numa sugestão</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/sugestoes/comment/edit</code></td><td class="auth-chip">Sessão</td><td>Edita um comentário próprio</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/sugestoes/comment/delete</code></td><td class="auth-chip">Sessão</td><td>Apaga um comentário próprio</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/public/sugestoes/status</code></td><td class="auth-chip">Admin</td><td>Muda o status de uma sugestão (moderação)</td></tr>
+      <tr class="domain-row"><td colspan="4">Doações</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/donations/checkout</code></td><td class="auth-chip">Pública</td><td>Cria um link de checkout PIX (InfinitePay)</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/donations/webhook</code></td><td class="auth-chip">Pública</td><td>Confirmação de pagamento (valida segredo próprio do webhook)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/donations/verify/:id</code></td><td class="auth-chip">Pública</td><td>Verifica o status de uma doação</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/donations/stats</code></td><td class="auth-chip">Pública</td><td>Ranking público de apoiadores</td></tr>
+      <tr class="domain-row"><td colspan="4">Atlética / Classroom / Loja</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/payments</code></td><td class="auth-chip">Pública</td><td>Lista de pagamentos registrados (loja/atlética)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/atletica</code></td><td class="auth-chip">Pública</td><td>Catálogo e agenda da atlética</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/atletica/upload</code></td><td class="auth-chip">Admin</td><td>Upload de imagem de produto</td></tr>
+        <tr><td><span class="method m-post">POST</span></td><td><code>/api/atletica/update</code></td><td class="auth-chip">Admin</td><td>Atualiza catálogo/agenda da atlética</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/classroom</code></td><td class="auth-chip">Pública</td><td>Feed de materiais em cache local</td></tr>
+      <tr class="domain-row"><td colspan="4">Infra</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/proxy/photo</code></td><td class="auth-chip">Sessão</td><td>Proxy de foto de perfil (não expõe o cookie da FEF)</td></tr>
+        <tr><td><span class="method m-get">GET</span></td><td><code>/api/proxy/ping</code></td><td class="auth-chip">Pública</td><td>Healthcheck do servidor</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <h2>Eventos Socket.IO — os 22</h2>
+    <p class="lede">Uma única conexão por cliente, multiplexada em salas (<code>Geral</code>, o curso do aluno, <code>dm_&lt;ra1&gt;_&lt;ra2&gt;</code>, <code>ticket_&lt;id&gt;</code>). <code>socket.authRa</code> é resolvido uma vez, na conexão, a partir do cookie <code>sistematicos_sid</code> — nunca de um campo do payload do evento.</p>
+    <div style="overflow-x:auto;">
+    <table class="route-table">
+      <thead><tr><th>Evento</th><th>Direção</th><th>Propósito</th></tr></thead>
+      <tbody>
+        <tr><td><code>register_online_admin</code></td><td class="auth-chip">cliente→servidor</td><td>Admin se marca online para a lista de presença</td></tr>
+        <tr><td><code>register_student_presence</code></td><td class="auth-chip">cliente→servidor</td><td>Aluno se marca online (multi-aba consciente)</td></tr>
+        <tr><td><code>request_online_students</code></td><td class="auth-chip">cliente→servidor</td><td>Pede a lista atual de estudantes online</td></tr>
+        <tr><td><code>disconnect</code></td><td class="auth-chip">automático</td><td>Remove presença ao fechar a aba/perder conexão</td></tr>
+        <tr><td><code>join_room</code></td><td class="auth-chip">cliente→servidor</td><td>Entra numa sala (sai de todas as anteriores primeiro)</td></tr>
+        <tr><td><code>new_message</code></td><td class="auth-chip">cliente→servidor</td><td>Envia mensagem de chat — retransmitida à sala</td></tr>
+        <tr><td><code>typing_start</code></td><td class="auth-chip">cliente→servidor</td><td>Indicador de "digitando..." no chat</td></tr>
+        <tr><td><code>typing_stop</code></td><td class="auth-chip">cliente→servidor</td><td>Encerra o indicador de digitação</td></tr>
+        <tr><td><code>edit_message</code></td><td class="auth-chip">cliente→servidor</td><td>Edita uma mensagem própria</td></tr>
+        <tr><td><code>delete_message</code></td><td class="auth-chip">cliente→servidor</td><td>Apaga uma mensagem própria</td></tr>
+        <tr><td><code>support_ticket_create</code></td><td class="auth-chip">cliente→servidor</td><td>Abre um novo chamado de suporte</td></tr>
+        <tr><td><code>support_ticket_join</code></td><td class="auth-chip">cliente→servidor</td><td>Entra na sala de um chamado existente</td></tr>
+        <tr><td><code>support_typing_start</code></td><td class="auth-chip">cliente→servidor</td><td>Indicador de digitação dentro de um chamado</td></tr>
+        <tr><td><code>support_typing_stop</code></td><td class="auth-chip">cliente→servidor</td><td>Encerra indicador de digitação do chamado</td></tr>
+        <tr><td><code>support_message</code></td><td class="auth-chip">cliente→servidor</td><td>Mensagem dentro de um chamado de suporte</td></tr>
+        <tr><td><code>support_ticket_close</code></td><td class="auth-chip">cliente→servidor</td><td>Encerra um chamado</td></tr>
+        <tr><td><code>new_payment</code></td><td class="auth-chip">cliente→servidor</td><td>Notifica novo pagamento registrado (broadcast)</td></tr>
+        <tr><td><code>delete_payment</code></td><td class="auth-chip">cliente→servidor</td><td>Remove um pagamento (broadcast)</td></tr>
+        <tr><td><code>support_ticket_room_join</code></td><td class="auth-chip">cliente→servidor</td><td>Reconecta à sala do chamado após refresh</td></tr>
+        <tr><td><code>support_ticket_transfer</code></td><td class="auth-chip">cliente→servidor</td><td>Transfere o chamado para outro atendente</td></tr>
+        <tr><td><code>support_ticket_transfer_team</code></td><td class="auth-chip">cliente→servidor</td><td>Transfere o chamado para outra equipe</td></tr>
+        <tr><td><code>update_atletica</code></td><td class="auth-chip">cliente→servidor</td><td>Notifica atualização do catálogo da atlética (broadcast)</td></tr>
       </tbody>
     </table>
     </div>
@@ -136,6 +258,35 @@
     "photoUrl": "/api/proxy/photo?target=...&ssid=..."
   }
 }</code></pre>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <h2>Mais exemplos de JSON</h2>
+    <p class="lede">Uma resposta de dado acadêmico normalizado (nunca HTML bruto do portal) e uma resposta de erro típica.</p>
+    <div class="grid-2">
+      <div class="code-card">
+        <div class="code-head"><span>GET /api/boletim · 200</span><span>json</span></div>
+        <pre><code class="language-json">{
+  "boletim": [
+    {
+      "disciplina": "Estrutura de Dados I",
+      "docente": "Prof. Exemplo da Silva",
+      "cargaHoraria": "30h",
+      "frequencia": 95,
+      "notas": { "n1": 8.5, "n2": 7.0, "media": 7.6 },
+      "status": "Em Curso"
+    }
+  ],
+  "availableYears": [2023, 2024, 2025, 2026],
+  "availableSemesters": [1, 2]
+}</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>429 · rate limit excedido</span><span>json</span></div>
+        <pre><code class="language-json">{ "error": "Muitas tentativas de login. Tente novamente em alguns minutos." }</code></pre>
+        <p style="padding:0 20px 16px; margin:0; font-family:var(--font-mono); font-size:11px; color:var(--muted);">Headers: RateLimit-Limit: 10 · RateLimit-Remaining: 0</p>
+      </div>
     </div>
   </section>
 
@@ -178,11 +329,93 @@ async function listarCursos(): Promise&lt;Curso[]&gt; {
   </section>
 
   <section style="padding-top:0;">
+    <h2>Login e sessão nas duas linguagens</h2>
+    <p class="lede">O login exige RA e senha reais de um aluno da UniFEF — não dá para testar sem uma conta. O que importa aqui é o formato: o cookie de sessão volta no header <code>Set-Cookie</code>, nunca no corpo.</p>
+    <div class="grid-2">
+      <div class="code-card">
+        <div class="code-head"><span>login.py</span><span>python</span></div>
+        <pre><code class="language-python">import requests
+
+session = requests.Session()  # guarda o cookie sistematicos_sid entre chamadas
+
+resp = session.post(
+    "https://sistematicos.site/api/login",
+    json={"username": "SEU_RA", "password": "SUA_SENHA"},
+    timeout=15,
+)
+if resp.status_code == 401:
+    raise SystemExit("RA ou senha incorretos")
+resp.raise_for_status()
+
+perfil = resp.json()["user"]
+print(f"Logado como {perfil['fullName']} ({perfil['course']})")
+
+# A sessão fica no cookie jar — reuso automático nas próximas chamadas.
+boletim = session.get("https://sistematicos.site/api/boletim").json()</code></pre>
+      </div>
+      <div class="code-card">
+        <div class="code-head"><span>authenticatedFetch.ts</span><span>typescript</span></div>
+        <pre><code class="language-typescript">// Versão simplificada do wrapper real do AuthContext: intercepta 401,
+// força uma renovação reativa da sessão FEF e só então repete a chamada.
+async function authenticatedFetch(input: string, init: RequestInit = {}) {
+  const res = await fetch(input, { ...init, credentials: "include" });
+  if (res.status !== 401) return res;
+
+  const renewed = await fetch("/api/session/me?reactive=1", { credentials: "include" });
+  if (!renewed.ok) throw new Error("Sessão expirada — faça login novamente");
+
+  return fetch(input, { ...init, credentials: "include" });
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <h2>Tempo real: conectando ao Socket.IO</h2>
+    <p class="lede">Uma conexão, várias salas — <code>join_room</code> sempre sai das anteriores antes de entrar na nova.</p>
+    <div class="code-card">
+      <div class="code-head"><span>chat-client.ts</span><span>typescript</span></div>
+      <pre><code class="language-typescript">import { io } from "socket.io-client";
+
+const socket = io("https://sistematicos.site", { withCredentials: true });
+
+socket.emit("join_room", "Sistemas de Informação");
+
+socket.on("message_received", (msg) => {
+  console.log(`${msg.fullName}: ${msg.content}`);
+});
+
+socket.emit("new_message", {
+  content: "Alguém tem o slide da aula de hoje?",
+  room: "Sistemas de Informação",
+});</code></pre>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
     <h2>O padrão de autorização, em código</h2>
-    <p class="lede">O trecho real de <code>server/index.js</code> que protege as rotas "dono ou admin" — o RA vem do cookie de sessão, nunca do corpo da requisição.</p>
+    <p class="lede">Os três middlewares reais de <code>server/index.js</code> — o RA vem sempre do cookie de sessão, nunca do corpo da requisição.</p>
     <div class="code-card">
       <div class="code-head"><span>server/index.js</span><span>typescript</span></div>
       <pre><code class="language-typescript">const getAuthRa = (req) => req.fefSession?.ra || null;
+
+// Rejeita a menos que exista uma sessão válida — qualquer aluno autenticado passa.
+const requireAuth = (req, res, next) => {
+  const ra = getAuthRa(req);
+  if (!ra) return res.status(401).json({ error: 'Autenticação necessária' });
+  req.authRa = ra;
+  next();
+};
+
+// Rejeita a menos que o RA da sessão esteja em ADMIN_RAS.
+const requireAdmin = (req, res, next) => {
+  const ra = getAuthRa(req);
+  if (!ra || !ADMIN_RAS.includes(ra)) {
+    return res.status(403).json({ error: 'Acesso negado' });
+  }
+  req.authRa = ra;
+  next();
+};
 
 // Rejeita a menos que o RA da sessão seja o dono do recurso, ou admin.
 const requireOwnRaOrAdmin = (extractTargetRa) => (req, res, next) => {
