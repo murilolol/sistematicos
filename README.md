@@ -21,6 +21,8 @@
 
 > **TL;DR** — entre com seu RA e senha da FEF, veja notas/horários/boletos __em tempo real__ numa interface moderna, sem duplicar seus dados acadêmicos em nenhum lugar. Detalhes técnicos completos em [ARCHITECTURE.md](./ARCHITECTURE.md).
 
+> **Avaliando este repositório?** Camada real-time sobre um portal acadêmico legado (JSF/PrimeFaces) que nunca duplica dado — **80 rotas HTTP e 22 eventos de Socket.IO**, todos com autorização derivada da sessão (nunca de campo enviado pelo cliente), sessão cifrada em repouso (AES-256-GCM) e exclusão de conta LGPD self-service. Solo, sem framework de boilerplate por trás: React 19, Express 5, TypeScript, Tailwind v4. Aprofundando: [ARCHITECTURE.md](./ARCHITECTURE.md) pra decisões de engenharia, [docs/api.md](./docs/api.md) pra cada rota, ou [site/index.html](./site/index.html) pra navegar tudo visualmente.
+
 <br>
 
 ## Índice
