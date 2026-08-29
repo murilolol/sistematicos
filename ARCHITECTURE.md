@@ -20,6 +20,7 @@ Como este é um repositório-vitrine, o código-fonte do motor de scraping não 
 - [Postura de segurança](#postura-de-segurança)
 - [Alinhamento com a LGPD](#alinhamento-com-a-lgpd)
 - [Glossário](#glossário)
+- [Vitrine visual](#vitrine-visual)
 
 ---
 
@@ -272,7 +273,7 @@ O que o frontend efetivamente recebe — HTML nenhum, só dados prontos para ren
 
 ## Mapa de rotas da API
 
-O servidor expõe pouco mais de 60 rotas HTTP, agrupadas por 12 domínios (autenticação, acadêmico, financeiro, portal institucional, comunidade, produtividade, conta, avisos, suporte, sugestões, doações, atlética/classroom, infra). Todas sob `/api/*` (exceto login/logout/session) passam primeiro pelo rate limiter geral e pelo `fefSessionMiddleware` descrito acima.
+O servidor expõe **80 rotas HTTP** e **22 eventos de Socket.IO**, agrupados em 13 domínios (autenticação, acadêmico, financeiro, portal institucional, comunidade, produtividade, conta, avisos, suporte, sugestões, doações, atlética/classroom, infra). Todas sob `/api/*` (exceto login/logout/session) passam primeiro pelo rate limiter geral e pelo `fefSessionMiddleware` descrito acima.
 
 A referência completa — tabela por domínio, o que cada grupo exige de autorização (sessão / dono-ou-admin / admin / pública) e exemplos de request/response — está em **[docs/api.md](../docs/api.md)**, para não duplicar essa tabela em dois lugares e ela sair de sincronia.
 
@@ -471,6 +472,12 @@ Termos específicos da stack do portal institucional, para quem nunca mexeu com 
 | **RA** | Registro Acadêmico — a matrícula do aluno na FEF, usada como identificador único em toda a plataforma. |
 | **Interstitial** | Um modal ou página intermediária que o portal força entre o login e o conteúdo real (comunicados, troca de senha obrigatória). |
 | **Cheerio** | Biblioteca Node que implementa uma API estilo jQuery para percorrer e extrair dados de HTML no servidor — é o que faz o papel de "parser" em toda a camada de scraping. |
+
+---
+
+## Vitrine visual
+
+Os diagramas deste documento são a referência técnica canônica — mas para uma versão navegável, com diagramas adicionais (arquitetura completa em zonas, árvore de rotas) e syntax highlighting nos exemplos de código, veja [site/diagramas.html](./site/diagramas.html) e [site/api.html](./site/api.html). Um resumo de tudo isso também existe como apresentação em slides: [site/sistematicos-apresentacao.pptx](./site/sistematicos-apresentacao.pptx).
 
 ---
 

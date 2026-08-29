@@ -33,6 +33,7 @@
 - [Capturas de tela](#capturas-de-tela)
 - [Stack](#stack)
 - [Arquitetura](#arquitetura)
+- [Vitrine, diagramas e apresentação](#vitrine-diagramas-e-apresentação)
 - [Autoria](#autoria)
 - [Aviso legal](#aviso-legal)
 
@@ -194,7 +195,7 @@ flowchart LR
     Server <-- "scraping ao vivo" --> FEF
 ```
 
-O documento **[ARCHITECTURE.md](./ARCHITECTURE.md)** é a referência completa para desenvolvedores e curiosos: diagramas de sequência do fluxo de login e da renovação automática de sessão, o adaptador de scraping reaproveitado por toda a camada acadêmica, a topologia de salas do Socket.IO e as decisões de arquitetura (e seus trade-offs) por trás de cada escolha. O mapa completo das mais de 60 rotas da API — agrupadas por domínio, com o que cada grupo exige de autorização e exemplos de request/response — está em **[docs/api.md](./docs/api.md)**.
+O documento **[ARCHITECTURE.md](./ARCHITECTURE.md)** é a referência completa para desenvolvedores e curiosos: diagramas de sequência do fluxo de login e da renovação automática de sessão, o adaptador de scraping reaproveitado por toda a camada acadêmica, a topologia de salas do Socket.IO e as decisões de arquitetura (e seus trade-offs) por trás de cada escolha. O mapa completo das 80 rotas da API e dos 22 eventos de Socket.IO — agrupados em 13 domínios, com o que cada grupo exige de autorização e exemplos de request/response — está em **[docs/api.md](./docs/api.md)** (ou na versão navegável [site/api.html](./site/api.html)).
 
 Um gostinho do que tem lá — o formato de resposta do login, já sem nenhum dado da sessão institucional:
 
@@ -207,6 +208,19 @@ Um gostinho do que tem lá — o formato de resposta do login, já sem nenhum da
   }
 }
 ```
+
+<br>
+
+## Vitrine, diagramas e apresentação
+
+Além dos documentos em Markdown, este repositório tem uma versão navegável, visual, de tudo isso — pensada para quem prefere ler numa página a rolar um README:
+
+| Recurso | O que tem |
+| :-- | :-- |
+| **[site/index.html](./site/index.html)** | Mini-site de uma página: hero, diagrama simplificado de como o sistema funciona, comparação com o portal oficial, os 12 módulos, uma seção de "rigor de engenharia" com números reais e a galeria de screenshots. |
+| **[site/api.html](./site/api.html)** | A mesma referência de [docs/api.md](./docs/api.md), com syntax highlighting real (JSON, Python, TypeScript, bash) e exemplos de resposta por domínio. |
+| **[site/diagramas.html](./site/diagramas.html)** | Cinco diagramas técnicos desenhados à mão em SVG: arquitetura completa do servidor, modelo de dados local (ER), sequência UML do login, topologia de salas do Socket.IO e a árvore das três camadas de rotas do frontend. |
+| **[site/sistematicos-apresentacao.pptx](./site/sistematicos-apresentacao.pptx)** | Apresentação em slides (28 slides) cobrindo o projeto de ponta a ponta — problema, arquitetura, segurança, LGPD e o trabalho de hardening — pensada para uma banca ou coordenador de curso. |
 
 <br>
 
