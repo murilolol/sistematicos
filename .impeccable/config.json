@@ -1,0 +1,44 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "hero-eyebrow-chip",
+        "value": "*",
+        "files": [
+          "site/diagramas.html"
+        ],
+        "createdAt": "2026-08-29T18:29:12.334Z",
+        "reason": "Agent: same eyebrow-label motif already established across site/index.html (hero + rigor cards), reused here for visual consistency across the mini-site's pages, not a new pattern"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "site/diagramas.html"
+        ],
+        "createdAt": "2026-08-29T18:29:12.446Z",
+        "reason": "Agent: matches the real Sistemáticos app's own font-family (src/index.css), already used identically in site/index.html for brand fidelity"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist mono",
+        "files": [
+          "site/diagramas.html"
+        ],
+        "createdAt": "2026-08-29T18:29:12.549Z",
+        "reason": "Agent: Geist Mono used per the loaded diagram-design skill's own typography spec for diagram labels/eyebrows, already used identically in site/index.html"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "site/diagramas.html"
+        ],
+        "createdAt": "2026-08-29T18:29:12.667Z",
+        "reason": "Agent: the close 7-12px sizes belong to the diagram-design skill's own dense mono type ramp for diagram labels (eyebrow/sublabel/arrow-label), not page body copy hierarchy"
+      }
+    ]
+  }
+}
