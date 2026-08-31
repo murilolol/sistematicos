@@ -1,7 +1,0 @@
-# Fixa o nome do projeto pra este repo, independente de resolução ambígua
-# (hook vs CLI vs MCP session-aware) — evita fragmentar em buckets diferentes.
-project = "sistematicos-showcase"
-project_strategy = "repo-root"
-
-[capture]
-ignore_paths = ["node_modules/**", ".env", "**/.env", ".git/**", "dist/**", "build/**"]

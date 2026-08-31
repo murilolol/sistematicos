@@ -2,3 +2,9 @@
 Thumbs.db
 node_modules/
 *.log
+
+# Ferramentas internas e IA
+.ai-memory.toml
+.impeccable/
+.gemini/
+.claude/
