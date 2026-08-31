@@ -1,22 +1,39 @@
-# Termos de Uso e Licença de Demonstração Técnica
+# Licença de Demonstração Técnica e Direitos Autorais
 
-Copyright (c) 2024-2026 Murilo Rocha Silva. Todos os direitos reservados.
-
-## 1. Natureza do Repositório
-Este repositório (`sistematicos-showcase`) é uma **vitrine técnica e acadêmica oficial** do projeto **Sistemáticos** — um portal acadêmico moderno, em tempo real, desenvolvido de forma independente para a comunidade da Fundação Educacional de Fernandópolis (UniFEF).
-
-## 2. Direitos Autorais e Propriedade Intelectual
-- Todo o design de interface, especificações de arquitetura, documentações de API (`docs/api.md`), diagramas técnicos (ER, UML, topologia) e apresentações contidos neste repositório são de autoria e propriedade intelectual exclusiva de **Murilo Rocha Silva**.
-- O código-fonte do motor proprietário de scraping/sincronização, automação e regras internas de negócio é privado e não é distribuído publicamente.
-
-## 3. Concessão de Uso
-É concedida permissão a qualquer pessoa para:
-- Visualizar, ler, analisar e estudar todo o material disponibilizado neste repositório para fins exclusivamente educacionais, de avaliação acadêmica, banca técnica ou recrutamento profissional.
-- Referenciar este projeto com a devida atribuição de autoria ao criador original.
-
-## 4. Restrições
-- É estritamente proibida a cópia integral ou parcial, reprodução comercial, redistribuição ou engenharia reversa com finalidades lucrativas ou sem atribuição explícita de autoria.
-- O nome "Sistemáticos", sua identidade visual e marcas associadas são protegidos e não podem ser utilizados em outros projetos acadêmicos ou comerciais sem autorização prévia por escrito.
+**Copyright © 2024–2026 Murilo Rocha Silva. Todos os direitos reservados.**
 
 ---
-*Para contato profissional ou acadêmico: [github.com/murilolol](https://github.com/murilolol)*
+
+### 1. Escopo e Natureza do Projeto
+Este repositório (`sistematicos-showcase`) constitui a **vitrine técnica, acadêmica e arquitetural oficial** do projeto **Sistemáticos** — ecossistema web de alta performance desenvolvido de forma independente para a comunidade universitária da Fundação Educacional de Fernandópolis (UniFEF).
+
+---
+
+### 2. Propriedade Intelectual e Autoria
+1. **Design e Interface:** Toda a identidade visual, design de componentes, tipografia, paleta de cores e layouts de interface são criações intelectuais exclusivas de **Murilo Rocha Silva**.
+2. **Engenharia e Arquitetura:** As especificações de fluxo de dados, diagramas técnicos (ER, UML, topologia de rede), documentações de rotas (`docs/api.md`) e materiais de apresentação são de titularidade autoral exclusiva do criador.
+3. **Código Proprietário:** O código-fonte do motor de scraping em tempo real, rotinas de sincronização reversa e infraestrutura de automação é de natureza privada e não faz parte da distribuição pública.
+
+---
+
+### 3. Concessão Limitada de Uso Acadêmico
+É outorgada permissão a qualquer indivíduo ou instituição para:
+- Visualizar, inspecionar, avaliar e estudar todo o acervo documental e diagramático deste repositório para fins **estritamente educacionais, pedagógicos, de bancas examinadoras acadêmicas ou avaliação de competências técnicas em processos de recrutamento**.
+- Citar ou referenciar os conceitos arquiteturais aqui documentados, desde que acompanhados da **atribuição explícita de autoria a Murilo Rocha Silva**.
+
+---
+
+### 4. Vedações e Restrições
+- **Uso Comercial:** É terminantemente proibida a cópia, comercialização, redistribuição, sublicenciamento ou exploração com fins lucrativos de qualquer parte deste projeto sem autorização expressa e documentada do autor.
+- **Engenharia Reversa e Plágio:** É vedado o uso deste material para reprodução desautorizada, cópia de marcas ou infração dos direitos autorais do criador.
+- **Identidade da Marca:** O nome *"Sistemáticos"*, suas marcas figurativas e logotipos não podem ser empregados em produtos terceiros sem consentimento prévio.
+
+---
+
+### 5. Contato Institucional e Acadêmico
+Para esclarecimentos sobre a propriedade intelectual, permissões de uso ou contato direto com o autor:
+
+- **Autor:** Murilo Rocha Silva
+- **Curso:** Sistemas de Informação (4º Semestre) — UniFEF
+- **E-mail Institucional:** [murilosilva@aluno.unifef.edu.br](mailto:murilosilva@aluno.unifef.edu.br)
+- **Perfil do Desenvolvedor:** [github.com/murilolol](https://github.com/murilolol)
