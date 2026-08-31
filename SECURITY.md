@@ -31,7 +31,7 @@ Se você identificar qualquer falha de segurança, brecha em potencial ou compor
 1. **Não abra uma Issue pública** para falhas que possam comprometer dados de usuários.
 2. Envie um e-mail confidencial para:
    - **Autor e Desenvolvedor:** Murilo Rocha Silva
-   - **Contato:** `imuriloxd1k@gmail.com`
+   - **E-mail Institucional:** `murilosilva@aluno.unifef.edu.br`
    - **Assunto:** `[SECURITY] Vulnerabilidade no Sistemáticos - <Breve resumo>`
 3. Forneça detalhes suficientes para reprodução (passo a passo, request de exemplo ou prova de conceito).
 

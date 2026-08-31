@@ -257,8 +257,9 @@ Os termos de uso da documentação, direitos autorais e regras desta vitrine aca
 Idealizado, desenhado e desenvolvido **individualmente** por **Murilo Rocha Silva** — 19 anos, programando há 3, cursando o 4º semestre de Sistemas de Informação na UniFEF — sem financiamento externo ou equipe.
 
 [![GitHub](https://img.shields.io/badge/GitHub-murilolol-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/murilolol)
-[![Instagram](https://img.shields.io/badge/Instagram-@muriloodev-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://instagram.com/muriloodev)
+[![Email](https://img.shields.io/badge/Email-murilosilva%40aluno.unifef.edu.br-14b8a6?style=flat-square&logo=gmail&logoColor=white)](mailto:murilosilva@aluno.unifef.edu.br)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-murilodev-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/murilodev)
+[![Instagram](https://img.shields.io/badge/Instagram-@muriloodev-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://instagram.com/muriloodev)
 
 > © Murilo Rocha Silva. Todos os direitos sobre o design, a arquitetura e o código-fonte são reservados ao autor.
 
