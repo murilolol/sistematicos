@@ -58,23 +58,26 @@ O **Sistemáticos** nasceu dessa frustração como aluno. Em vez de mais um sist
 
 - **Zero atrito** — notas, faltas, horários, boletos e materiais em uma SPA fluida, sem recarregar página.
 - **Sem duplicação de dados** — cada informação é buscada ao vivo direto do portal institucional; nada de notas desatualizadas em um banco paralelo.
-- **Ecossistema completo** — financeiro com PIX, chat em tempo real, integração com Google Classroom, Kanban de tarefas e uma pequena rede social entre os próprios alunos do curso.
-
 > **Nota:** este repositório é uma *vitrine técnica*. O código-fonte do motor de sincronização e automação é proprietário e não é distribuído publicamente.
 
 > A própria plataforma também tem uma versão *ao vivo* deste documento: a página **[Sobre o Projeto](https://sistematicos.site/sobre)**, dentro do portal, reúne visão geral, arquitetura, mapa de API e postura de segurança em abas navegáveis — pensada tanto para aluno curioso quanto para quem só quer confirmar o que é feito com os próprios dados.
 
-### Sistemáticos vs. portal oficial
+### Sistemáticos vs. Portal Oficial: Matriz de Impacto
 
-| | Portal oficial (JSF) | Sistemáticos |
-| :-- | :--: | :--: |
-| Recarrega a página a cada clique | ✅ | ❌ |
-| Layout responsivo para celular | ❌ | ✅ |
-| Chat em tempo real entre alunos | ❌ | ✅ |
-| Simulador de médias | ❌ | ✅ |
-| PIX para mensalidade | ❌ | ✅ |
-| Instalável como app (PWA) | ❌ | ✅ |
-| Fonte oficial dos seus dados acadêmicos | ✅ | _consulta o mesmo portal_ |
+| Módulo | No Portal Oficial Legado (JSF) | No Sistemáticos (Camada Moderna) |
+| :-- | :-- | :-- |
+| **1. Boletim** | Tabelas estáticas sem cálculo, exigindo recarregar a página para trocar de semestre. | Média ponderada calculada na hora + **simulador de aprovação** (*"quanto preciso na P2?"*). |
+| **2. Vida Acadêmica** | Cronograma em PDFs soltos e menus fragmentados. | Horários da semana, faltas limite e calendário de provas reunidos em uma visão única. |
+| **3. Financeiro** | Apenas código de barras tradicional para download em PDF. | Visualização clara de parcelas + **gerador instantâneo de PIX Copia e Cola**. |
+| **4. Comunicação** | Nenhum canal de comunicação entre alunos no portal. | **Chat em tempo real (Socket.IO)** por sala de turma, mensagens diretas e central de suporte. |
+| **5. Google Classroom** | Aluno precisa alternar entre portais diferentes. | Feed sincronizado de atividades pendentes e materiais diretamente no painel. |
+| **6. Hub Acadêmico** | Inexistente. | Banco colaborativo de provas antigas, calculadora e networking de estágio/carreira. |
+| **7. Ferramentas** | Formatação manual de trabalhos pelo aluno. | **Gerador automático de capa ABNT** com dados institucionais pré-preenchidos. |
+| **8. Tarefas** | Inexistente (dependência de apps externos). | **Quadro Kanban pessoal** integrado para organizar entregas e trabalhos em grupo. |
+| **9. Avisos & Gestão** | Murais estáticos e circulares em PDF. | Comunicados segmentados por curso/semestre com painel para representantes. |
+| **10. Comunidade** | Sem diretório de contatos. | Diretório de colegas, central de sugestões com votação aberta e loja da atlética. |
+| **11. Infraestrutura & Apoio** | Custo institucional alto e manutenção complexa. | Modelo autossustentável via doações voluntárias, sem custo para o estudante. |
+| **12. Interface & PWA** | Não responsivo, layout quebrado no celular. | **PWA instalável**, tema dark/light, busca universal (`Ctrl+K`) e navegação mobile pensada para uma mão. |
 
 <br>
 
@@ -230,6 +233,7 @@ Além dos documentos em Markdown, este repositório tem uma versão navegável, 
 | **[site/api.html](./site/api.html)** | A mesma referência de [docs/api.md](./docs/api.md), com syntax highlighting real (JSON, Python, TypeScript, bash) e exemplos de resposta por domínio. |
 | **[site/diagramas.html](./site/diagramas.html)** | Cinco diagramas técnicos desenhados à mão em SVG: arquitetura completa do servidor, modelo de dados local (ER), sequência UML do login, topologia de salas do Socket.IO e a árvore das três camadas de rotas do frontend. |
 | **[site/sistematicos-apresentacao.pptx](./site/sistematicos-apresentacao.pptx)** | Apresentação em slides (28 slides) cobrindo o projeto de ponta a ponta — problema, arquitetura, segurança, LGPD e o trabalho de hardening — pensada para uma banca ou coordenador de curso. |
+| **[docs/roteiro-apresentacao.md](./docs/roteiro-apresentacao.md)** | Roteiro prático de apresentação de 10 minutos para bancas e professores, incluindo roteiro de Live Demo e FAQ com as 5 perguntas técnicas mais difíceis respondidas. |
 
 <br>
 
