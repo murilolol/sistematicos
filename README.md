@@ -13,15 +13,20 @@
   <img src="https://img.shields.io/badge/Node.js-Express_5-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js / Express 5" />
   <img src="https://img.shields.io/badge/Socket.IO-realtime-010101?style=flat-square&logo=socketdotio&logoColor=white" alt="Socket.IO" />
   <img src="https://img.shields.io/badge/PWA-ready-5A0FC8?style=flat-square&logo=pwa&logoColor=white" alt="PWA" />
+  <img src="https://img.shields.io/badge/GitHub%20Pages-Showcase%20Live-brightgreen?style=flat-square&logo=githubpages&logoColor=white" alt="Showcase Live" />
 </p>
 
-<p align="center"><strong><a href="https://sistematicos.site/">sistematicos.site</a></strong></p>
+<p align="center">
+  <strong><a href="https://sistematicos.site/">Portal Oficial: sistematicos.site ↗</a></strong>
+  &nbsp;&nbsp;•&nbsp;&nbsp;
+  <strong><a href="https://murilolol.github.io/sistematicos/">Vitrine Online & Diagramas Interativos ↗</a></strong>
+</p>
 
 <br>
 
 > **TL;DR** — entre com seu RA e senha da FEF, veja notas/horários/boletos __em tempo real__ numa interface moderna, sem duplicar seus dados acadêmicos em nenhum lugar. Detalhes técnicos completos em [ARCHITECTURE.md](./ARCHITECTURE.md).
 
-> **Avaliando este repositório?** Camada real-time sobre um portal acadêmico legado (JSF/PrimeFaces) que nunca duplica dado — **80 rotas HTTP e 22 eventos de Socket.IO**, todos com autorização derivada da sessão (nunca de campo enviado pelo cliente), sessão cifrada em repouso (AES-256-GCM) e exclusão de conta LGPD self-service. Solo, sem framework de boilerplate por trás: React 19, Express 5, TypeScript, Tailwind v4. Aprofundando: [ARCHITECTURE.md](./ARCHITECTURE.md) pra decisões de engenharia, [docs/api.md](./docs/api.md) pra cada rota, ou [site/index.html](./site/index.html) pra navegar tudo visualmente.
+> **Avaliando este repositório / Banca Acadêmica?** Camada real-time sobre um portal acadêmico legado (JSF/PrimeFaces) que nunca duplica dados — **80 rotas HTTP e 22 eventos de Socket.IO**, todos com autorização derivada da sessão (zero-trust client-side), sessão cifrada em repouso transitório (AES-256-GCM) e exclusão de conta LGPD self-service. Solo, sem framework de boilerplate: React 19, Express 5, TypeScript, Tailwind v4. Aprofundando: [ARCHITECTURE.md](./ARCHITECTURE.md) para decisões de engenharia, [docs/api.md](./docs/api.md) para a referência completa da API, [site/sistematicos-apresentacao.pptx](./site/sistematicos-apresentacao.pptx) para o deck de slides de 28 páginas, ou a **[Vitrine Online Interativa](https://murilolol.github.io/sistematicos/)** para explorar tudo visualmente.
 
 <br>
 
@@ -36,6 +41,8 @@
 - [Stack](#stack)
 - [Arquitetura](#arquitetura)
 - [Vitrine, diagramas e apresentação](#vitrine-diagramas-e-apresentação)
+- [Segurança e LGPD](#segurança-e-lgpd)
+- [Licença e termos](#licença-e-termos)
 - [Autoria](#autoria)
 - [Aviso legal](#aviso-legal)
 
@@ -223,6 +230,21 @@ Além dos documentos em Markdown, este repositório tem uma versão navegável, 
 | **[site/api.html](./site/api.html)** | A mesma referência de [docs/api.md](./docs/api.md), com syntax highlighting real (JSON, Python, TypeScript, bash) e exemplos de resposta por domínio. |
 | **[site/diagramas.html](./site/diagramas.html)** | Cinco diagramas técnicos desenhados à mão em SVG: arquitetura completa do servidor, modelo de dados local (ER), sequência UML do login, topologia de salas do Socket.IO e a árvore das três camadas de rotas do frontend. |
 | **[site/sistematicos-apresentacao.pptx](./site/sistematicos-apresentacao.pptx)** | Apresentação em slides (28 slides) cobrindo o projeto de ponta a ponta — problema, arquitetura, segurança, LGPD e o trabalho de hardening — pensada para uma banca ou coordenador de curso. |
+
+<br>
+
+## Segurança e LGPD
+
+A postura de segurança, o modelo de criptografia em memória (**AES-256-GCM**), a política de descarte de senhas e os canais confidenciais para reporte de vulnerabilidades estão formalizados em:
+- **[SECURITY.md](./SECURITY.md)** — Política de Segurança, Controles Técnicos e Divulgação Responsável.
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — Racional completo de engenharia, isolamento de sessão e fluxo de dados.
+
+<br>
+
+## Licença e termos
+
+Os termos de uso da documentação, direitos autorais e regras desta vitrine acadêmica estão descritos em:
+- **[LICENSE](./LICENSE)** — Licença de Demonstração Técnica e Propriedade Intelectual.
 
 <br>
 
