@@ -1,0 +1,22 @@
+# Termos de Uso e Licença de Demonstração Técnica
+
+Copyright (c) 2024-2026 Murilo Rocha Silva. Todos os direitos reservados.
+
+## 1. Natureza do Repositório
+Este repositório (`sistematicos-showcase`) é uma **vitrine técnica e acadêmica oficial** do projeto **Sistemáticos** — um portal acadêmico moderno, em tempo real, desenvolvido de forma independente para a comunidade da Fundação Educacional de Fernandópolis (UniFEF).
+
+## 2. Direitos Autorais e Propriedade Intelectual
+- Todo o design de interface, especificações de arquitetura, documentações de API (`docs/api.md`), diagramas técnicos (ER, UML, topologia) e apresentações contidos neste repositório são de autoria e propriedade intelectual exclusiva de **Murilo Rocha Silva**.
+- O código-fonte do motor proprietário de scraping/sincronização, automação e regras internas de negócio é privado e não é distribuído publicamente.
+
+## 3. Concessão de Uso
+É concedida permissão a qualquer pessoa para:
+- Visualizar, ler, analisar e estudar todo o material disponibilizado neste repositório para fins exclusivamente educacionais, de avaliação acadêmica, banca técnica ou recrutamento profissional.
+- Referenciar este projeto com a devida atribuição de autoria ao criador original.
+
+## 4. Restrições
+- É estritamente proibida a cópia integral ou parcial, reprodução comercial, redistribuição ou engenharia reversa com finalidades lucrativas ou sem atribuição explícita de autoria.
+- O nome "Sistemáticos", sua identidade visual e marcas associadas são protegidos e não podem ser utilizados em outros projetos acadêmicos ou comerciais sem autorização prévia por escrito.
+
+---
+*Para contato profissional ou acadêmico: [github.com/murilolol](https://github.com/murilolol)*
