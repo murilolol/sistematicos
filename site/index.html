@@ -33,26 +33,27 @@
       background-color: var(--bg);
       color: var(--text);
       font-family: var(--font);
-      line-height: 1.6;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; height: auto; display: block; }
 
-    /* Lucide Icon Standard Styling */
     .lucide {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       stroke-width: 2px;
-      vertical-align: -3px;
+      vertical-align: -2px;
       display: inline-block;
     }
 
     .container {
-      max-width: 1200px;
+      width: 100%;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 20px;
     }
 
     /* Ambient background */
@@ -62,157 +63,215 @@
       left: 50%;
       transform: translateX(-50%);
       width: 100vw;
-      height: 600px;
+      height: 500px;
       background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(20, 184, 166, 0.18), transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
 
-    /* Top Navbar */
+    /* Compact Responsive Header */
     header {
       position: sticky;
       top: 0;
       z-index: 50;
       backdrop-filter: blur(12px);
-      background: rgba(9, 9, 11, 0.8);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(9, 9, 11, 0.85);
       border-bottom: 1px solid var(--border);
     }
     .nav-wrap {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 70px;
+      height: 56px;
+      gap: 16px;
     }
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       font-weight: 700;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       letter-spacing: -0.02em;
+      flex-shrink: 0;
     }
     .brand-icon {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       background: linear-gradient(135deg, var(--accent), #0d9488);
       color: #000;
-      border-radius: 9px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .brand-icon .lucide {
-      width: 19px;
-      height: 19px;
+      width: 16px;
+      height: 16px;
       stroke-width: 2.5px;
       color: #042f2e;
     }
+
+    /* Desktop Navigation Links */
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 24px;
-      font-size: 0.9rem;
+      gap: 18px;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
     .nav-links a {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: color 0.2s;
+      gap: 5px;
+      transition: color 0.15s ease;
+      white-space: nowrap;
     }
     .nav-links a:hover, .nav-links a.active {
       color: var(--text);
     }
     .nav-links a .lucide {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
       color: var(--text-dim);
     }
     .nav-links a:hover .lucide, .nav-links a.active .lucide {
       color: var(--accent-light);
     }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
     .nav-btn {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      padding: 6px 12px;
+      border-radius: 7px;
+      font-size: 0.8rem;
       font-weight: 500;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.1);
       border-color: rgba(255, 255, 255, 0.2);
     }
 
-    /* Hero Section */
+    /* Mobile Menu Button */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 8px;
+      border-radius: 7px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .mobile-menu-btn .lucide {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Mobile Drawer */
+    .mobile-drawer {
+      display: none;
+      background: #111114;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px 24px;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .mobile-drawer.open {
+      display: flex;
+    }
+    .mobile-drawer a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .mobile-drawer a:hover {
+      color: var(--text);
+    }
+
+    /* Hero Section (Compact & Dynamic) */
     .hero {
       position: relative;
       z-index: 1;
-      padding: 80px 0 60px;
+      padding: 48px 0 28px;
       text-align: center;
     }
     .badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
+      gap: 6px;
+      padding: 5px 12px;
       border-radius: 9999px;
       background: rgba(20, 184, 166, 0.1);
       border: 1px solid var(--border-accent);
       color: var(--accent-light);
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
     }
     .badge .lucide {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
     }
     .hero h1 {
-      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-size: clamp(1.75rem, 4vw, 3.2rem);
       font-weight: 800;
       letter-spacing: -0.03em;
-      line-height: 1.15;
-      max-width: 900px;
-      margin: 0 auto 20px;
+      line-height: 1.18;
+      max-width: 840px;
+      margin: 0 auto 16px;
       background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .hero p {
-      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      font-size: clamp(0.95rem, 1.6vw, 1.15rem);
       color: var(--text-muted);
-      max-width: 720px;
-      margin: 0 auto 36px;
+      max-width: 680px;
+      margin: 0 auto 28px;
       font-weight: 400;
+      line-height: 1.6;
     }
     .hero-actions {
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 12px;
       flex-wrap: wrap;
     }
     .btn-primary {
       background: var(--accent);
       color: #000;
       font-weight: 600;
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
       gap: 8px;
       transition: all 0.2s;
-      box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
+      box-shadow: 0 0 16px rgba(20, 184, 166, 0.25);
     }
     .btn-primary:hover {
       background: var(--accent-light);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
     .btn-primary .lucide {
       color: #042f2e;
@@ -222,8 +281,9 @@
       border: 1px solid var(--border);
       color: var(--text);
       font-weight: 500;
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -239,23 +299,23 @@
 
     /* Mockup Frame */
     .mockup-wrap {
-      margin: 40px auto 80px;
-      max-width: 1100px;
+      margin: 24px auto 60px;
+      max-width: 1080px;
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
       overflow: hidden;
     }
     .mockup-header {
       background: #18181b;
-      padding: 12px 18px;
+      padding: 10px 14px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       border-bottom: 1px solid var(--border);
     }
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; }
     .dot-red { background: #ef4444; }
     .dot-yellow { background: #f59e0b; }
     .dot-green { background: #10b981; }
@@ -263,42 +323,42 @@
       font-family: var(--font-mono);
       font-size: 0.75rem;
       color: var(--text-dim);
-      margin-left: 12px;
+      margin-left: 10px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
     .mockup-title .lucide {
-      width: 13px;
-      height: 13px;
+      width: 12px;
+      height: 12px;
     }
 
     /* Section Styles */
-    section { padding: 60px 0; position: relative; z-index: 1; }
+    section { padding: 48px 0; position: relative; z-index: 1; }
     .section-title {
-      font-size: 2rem;
+      font-size: clamp(1.5rem, 3vw, 2rem);
       font-weight: 700;
       letter-spacing: -0.02em;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     .section-subtitle {
       color: var(--text-muted);
-      font-size: 1.1rem;
-      margin-bottom: 40px;
-      max-width: 680px;
+      font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+      margin-bottom: 32px;
+      max-width: 640px;
     }
 
-    /* Comparison Table / Matrix */
+    /* Responsive Grid Layouts */
     .matrix-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: 16px;
     }
     .matrix-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
+      border-radius: 12px;
+      padding: 20px;
       transition: all 0.2s;
     }
     .matrix-card:hover {
@@ -306,20 +366,20 @@
       background: var(--bg-card-hover);
     }
     .matrix-card h3 {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 600;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       color: var(--text);
       display: flex;
       align-items: center;
       gap: 10px;
     }
     .matrix-icon {
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       background: rgba(20, 184, 166, 0.1);
       border: 1px solid var(--border-accent);
-      border-radius: 8px;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -327,17 +387,17 @@
       flex-shrink: 0;
     }
     .matrix-icon .lucide {
-      width: 17px;
-      height: 17px;
+      width: 15px;
+      height: 15px;
     }
     .matrix-row {
-      margin-bottom: 12px;
-      font-size: 0.9rem;
+      margin-bottom: 10px;
+      font-size: 0.88rem;
     }
     .matrix-tag {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 600;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 4px;
       display: inline-block;
       margin-bottom: 4px;
@@ -348,56 +408,56 @@
     /* Features 3-Col */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+      gap: 20px;
     }
     .feature-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
+      border-radius: 12px;
+      padding: 24px;
     }
     .feature-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       background: rgba(20, 184, 166, 0.12);
       border: 1px solid var(--border-accent);
       color: var(--accent-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .feature-icon .lucide {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
     }
     .feature-card h4 {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .feature-card p {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-muted);
     }
 
     /* Screenshots gallery */
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+      gap: 20px;
     }
     .gallery-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 12px;
       overflow: hidden;
     }
     .gallery-card h4 {
-      padding: 16px 20px;
-      font-size: 0.95rem;
+      padding: 14px 18px;
+      font-size: 0.9rem;
       font-weight: 600;
       border-bottom: 1px solid var(--border);
       display: flex;
@@ -406,48 +466,53 @@
     }
     .gallery-card h4 .lucide {
       color: var(--accent-light);
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
     }
 
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 50px 0;
-      margin-top: 80px;
+      padding: 40px 0;
+      margin-top: 60px;
       color: var(--text-dim);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
     .footer-wrap {
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 16px;
     }
     .social-links {
       display: flex;
-      gap: 20px;
+      gap: 16px;
       align-items: center;
       flex-wrap: wrap;
     }
     .social-link {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      transition: color 0.2s;
+      gap: 5px;
+      transition: color 0.15s ease;
     }
     .social-link:hover {
       color: var(--text);
     }
     .social-link .lucide {
-      width: 15px;
-      height: 15px;
+      width: 14px;
+      height: 14px;
     }
 
-    @media (max-width: 768px) {
-      .gallery-grid { grid-template-columns: 1fr; }
+    /* Responsive Breakpoints */
+    @media (max-width: 992px) {
       .nav-links { display: none; }
+      .mobile-menu-btn { display: inline-flex; }
+    }
+    @media (max-width: 640px) {
+      .nav-btn span.btn-label { display: none; }
+      .gallery-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -462,22 +527,40 @@
         </div>
         <span>SISTEMÁTICOS</span>
       </a>
+
+      <!-- Desktop Links -->
       <nav class="nav-links">
         <a href="index.html" class="active"><i data-lucide="sparkles"></i> Vitrine</a>
         <a href="#modulos"><i data-lucide="grid"></i> 12 Módulos</a>
         <a href="#engenharia"><i data-lucide="shield-check"></i> Engenharia</a>
         <a href="#galeria"><i data-lucide="image"></i> Screenshots</a>
-        <a href="diagramas.html"><i data-lucide="network"></i> Diagramas (ER/UML)</a>
-        <a href="api.html"><i data-lucide="code-2"></i> Referência da API</a>
+        <a href="diagramas.html"><i data-lucide="network"></i> Diagramas</a>
+        <a href="api.html"><i data-lucide="code-2"></i> API</a>
       </nav>
-      <div style="display: flex; gap: 12px;">
+
+      <!-- Action Buttons & Mobile Toggle -->
+      <div class="nav-actions">
         <a href="https://sistematicos.site/" target="_blank" rel="noopener" class="nav-btn" style="color: var(--accent-light); border-color: var(--border-accent);">
-          Portal ao Vivo <i data-lucide="external-link"></i>
+          <span class="btn-label">Portal ao Vivo</span> <i data-lucide="external-link"></i>
         </a>
         <a href="https://github.com/murilolol/sistematicos" target="_blank" rel="noopener" class="nav-btn">
-          <i data-lucide="github"></i> GitHub
+          <i data-lucide="github"></i> <span class="btn-label">GitHub</span>
         </a>
+        <button class="mobile-menu-btn" id="menuToggle" aria-label="Abrir Menu">
+          <i data-lucide="menu" id="menuIcon"></i>
+        </button>
       </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+      <a href="index.html"><i data-lucide="sparkles"></i> Vitrine</a>
+      <a href="#modulos" onclick="closeDrawer()"><i data-lucide="grid"></i> 12 Módulos</a>
+      <a href="#engenharia" onclick="closeDrawer()"><i data-lucide="shield-check"></i> Rigor de Engenharia</a>
+      <a href="#galeria" onclick="closeDrawer()"><i data-lucide="image"></i> Galeria de Telas</a>
+      <a href="diagramas.html"><i data-lucide="network"></i> Diagramas Técnicos (ER/UML)</a>
+      <a href="api.html"><i data-lucide="code-2"></i> Referência da API (80 Rotas)</a>
+      <a href="sistematicos-apresentacao.pptx" download><i data-lucide="download"></i> Baixar Slides PPTX</a>
     </div>
   </header>
 
@@ -495,7 +578,7 @@
             Acessar Portal (sistematicos.site) <i data-lucide="external-link"></i>
           </a>
           <a href="sistematicos-apresentacao.pptx" download class="btn-secondary">
-            <i data-lucide="download"></i> Baixar Deck de Slides (28 Slides)
+            <i data-lucide="download"></i> Baixar Slides (28 Slides)
           </a>
           <a href="https://github.com/murilolol/sistematicos" target="_blank" rel="noopener" class="btn-secondary">
             <i data-lucide="github"></i> Ver no GitHub
@@ -745,12 +828,12 @@
           </div>
         </div>
 
-        <div style="margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <div style="margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap;">
           <a href="diagramas.html" class="btn-secondary">
-            <i data-lucide="network"></i> Explorar Diagramas Técnicos (ER + UML) <i data-lucide="arrow-right"></i>
+            <i data-lucide="network"></i> Diagramas Técnicos (ER + UML) <i data-lucide="arrow-right"></i>
           </a>
           <a href="api.html" class="btn-secondary">
-            <i data-lucide="code-2"></i> Ver Referência das 80 Rotas da API <i data-lucide="arrow-right"></i>
+            <i data-lucide="code-2"></i> Referência da API (80 Rotas) <i data-lucide="arrow-right"></i>
           </a>
         </div>
       </div>
@@ -813,6 +896,23 @@
   <script>
     // Inicializa todos os ícones Lucide
     lucide.createIcons();
+
+    // Mobile Drawer Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+    const menuIcon = document.getElementById('menuIcon');
+
+    menuToggle.addEventListener('click', () => {
+      const isOpen = mobileDrawer.classList.toggle('open');
+      menuIcon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
+      lucide.createIcons();
+    });
+
+    function closeDrawer() {
+      mobileDrawer.classList.remove('open');
+      menuIcon.setAttribute('data-lucide', 'menu');
+      lucide.createIcons();
+    }
   </script>
 </body>
 </html>
