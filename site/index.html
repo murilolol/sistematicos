@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons Framework -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
       --bg: #09090b;
@@ -37,6 +39,15 @@
 
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; height: auto; display: block; }
+
+    /* Lucide Icon Standard Styling */
+    .lucide {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2px;
+      vertical-align: -3px;
+      display: inline-block;
+    }
 
     .container {
       max-width: 1200px;
@@ -81,16 +92,20 @@
       letter-spacing: -0.02em;
     }
     .brand-icon {
-      width: 32px;
-      height: 32px;
+      width: 34px;
+      height: 34px;
       background: linear-gradient(135deg, var(--accent), #0d9488);
       color: #000;
-      border-radius: 8px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 0.85rem;
+    }
+    .brand-icon .lucide {
+      width: 19px;
+      height: 19px;
+      stroke-width: 2.5px;
+      color: #042f2e;
     }
     .nav-links {
       display: flex;
@@ -99,8 +114,22 @@
       font-size: 0.9rem;
       color: var(--text-muted);
     }
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
     .nav-links a:hover, .nav-links a.active {
       color: var(--text);
+    }
+    .nav-links a .lucide {
+      width: 15px;
+      height: 15px;
+      color: var(--text-dim);
+    }
+    .nav-links a:hover .lucide, .nav-links a.active .lucide {
+      color: var(--accent-light);
     }
     .nav-btn {
       background: rgba(255, 255, 255, 0.06);
@@ -109,6 +138,9 @@
       border-radius: 8px;
       font-size: 0.85rem;
       font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.2s;
     }
     .nav-btn:hover {
@@ -137,6 +169,10 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: 24px;
+    }
+    .badge .lucide {
+      width: 14px;
+      height: 14px;
     }
     .hero h1 {
       font-size: clamp(2.4rem, 5vw, 4rem);
@@ -168,12 +204,18 @@
       font-weight: 600;
       padding: 12px 24px;
       border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       transition: all 0.2s;
       box-shadow: 0 0 20px rgba(20, 184, 166, 0.3);
     }
     .btn-primary:hover {
       background: var(--accent-light);
       transform: translateY(-2px);
+    }
+    .btn-primary .lucide {
+      color: #042f2e;
     }
     .btn-secondary {
       background: var(--bg-card);
@@ -182,11 +224,17 @@
       font-weight: 500;
       padding: 12px 24px;
       border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       transition: all 0.2s;
     }
     .btn-secondary:hover {
       background: var(--bg-card-hover);
       border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-secondary .lucide {
+      color: var(--text-muted);
     }
 
     /* Mockup Frame */
@@ -216,6 +264,13 @@
       font-size: 0.75rem;
       color: var(--text-dim);
       margin-left: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mockup-title .lucide {
+      width: 13px;
+      height: 13px;
     }
 
     /* Section Styles */
@@ -257,7 +312,23 @@
       color: var(--text);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+    }
+    .matrix-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(20, 184, 166, 0.1);
+      border: 1px solid var(--border-accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-light);
+      flex-shrink: 0;
+    }
+    .matrix-icon .lucide {
+      width: 17px;
+      height: 17px;
     }
     .matrix-row {
       margin-bottom: 12px;
@@ -286,8 +357,24 @@
       border-radius: 14px;
       padding: 28px;
     }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(20, 184, 166, 0.12);
+      border: 1px solid var(--border-accent);
+      color: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .feature-icon .lucide {
+      width: 22px;
+      height: 22px;
+    }
     .feature-card h4 {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 600;
       margin-bottom: 10px;
     }
@@ -313,6 +400,14 @@
       font-size: 0.95rem;
       font-weight: 600;
       border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .gallery-card h4 .lucide {
+      color: var(--accent-light);
+      width: 16px;
+      height: 16px;
     }
 
     /* Footer */
@@ -330,6 +425,25 @@
       flex-wrap: wrap;
       gap: 20px;
     }
+    .social-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .social-link:hover {
+      color: var(--text);
+    }
+    .social-link .lucide {
+      width: 15px;
+      height: 15px;
+    }
 
     @media (max-width: 768px) {
       .gallery-grid { grid-template-columns: 1fr; }
@@ -343,20 +457,26 @@
   <header>
     <div class="container nav-wrap">
       <a href="index.html" class="brand">
-        <div class="brand-icon">SI</div>
+        <div class="brand-icon">
+          <i data-lucide="layers"></i>
+        </div>
         <span>SISTEMÁTICOS</span>
       </a>
       <nav class="nav-links">
-        <a href="index.html" class="active">Vitrine</a>
-        <a href="#modulos">12 Módulos</a>
-        <a href="#engenharia">Engenharia</a>
-        <a href="#galeria">Screenshots</a>
-        <a href="diagramas.html">Diagramas (ER/UML)</a>
-        <a href="api.html">Referência da API</a>
+        <a href="index.html" class="active"><i data-lucide="sparkles"></i> Vitrine</a>
+        <a href="#modulos"><i data-lucide="grid"></i> 12 Módulos</a>
+        <a href="#engenharia"><i data-lucide="shield-check"></i> Engenharia</a>
+        <a href="#galeria"><i data-lucide="image"></i> Screenshots</a>
+        <a href="diagramas.html"><i data-lucide="network"></i> Diagramas (ER/UML)</a>
+        <a href="api.html"><i data-lucide="code-2"></i> Referência da API</a>
       </nav>
       <div style="display: flex; gap: 12px;">
-        <a href="https://sistematicos.site/" target="_blank" rel="noopener" class="nav-btn" style="color: var(--accent-light); border-color: var(--border-accent);">Portal ao Vivo ↗</a>
-        <a href="https://github.com/murilolol/sistematicos" target="_blank" rel="noopener" class="nav-btn">GitHub</a>
+        <a href="https://sistematicos.site/" target="_blank" rel="noopener" class="nav-btn" style="color: var(--accent-light); border-color: var(--border-accent);">
+          Portal ao Vivo <i data-lucide="external-link"></i>
+        </a>
+        <a href="https://github.com/murilolol/sistematicos" target="_blank" rel="noopener" class="nav-btn">
+          <i data-lucide="github"></i> GitHub
+        </a>
       </div>
     </div>
   </header>
@@ -365,13 +485,21 @@
     <!-- Hero -->
     <section class="hero">
       <div class="container">
-        <div class="badge">PROJETO ACADÊMICO & VITRINE TÉCNICA</div>
+        <div class="badge">
+          <i data-lucide="award"></i> PROJETO ACADÊMICO & VITRINE TÉCNICA
+        </div>
         <h1>Uma experiência acadêmica moderna, em tempo real e sem atrito.</h1>
         <p>Desenvolvido de forma independente como uma camada de alta performance sobre o portal institucional legado da UniFEF — 12 módulos integrados, zero duplicação de dados e criptografia de ponta a ponta.</p>
         <div class="hero-actions">
-          <a href="https://sistematicos.site/" target="_blank" rel="noopener" class="btn-primary">Acessar Portal (sistematicos.site) ↗</a>
-          <a href="sistematicos-apresentacao.pptx" download class="btn-secondary">📥 Baixar Deck de Slides (28 Slides)</a>
-          <a href="https://github.com/murilolol/sistematicos" target="_blank" rel="noopener" class="btn-secondary">Ver no GitHub</a>
+          <a href="https://sistematicos.site/" target="_blank" rel="noopener" class="btn-primary">
+            Acessar Portal (sistematicos.site) <i data-lucide="external-link"></i>
+          </a>
+          <a href="sistematicos-apresentacao.pptx" download class="btn-secondary">
+            <i data-lucide="download"></i> Baixar Deck de Slides (28 Slides)
+          </a>
+          <a href="https://github.com/murilolol/sistematicos" target="_blank" rel="noopener" class="btn-secondary">
+            <i data-lucide="github"></i> Ver no GitHub
+          </a>
         </div>
       </div>
     </section>
@@ -383,7 +511,9 @@
           <div class="dot dot-red"></div>
           <div class="dot dot-yellow"></div>
           <div class="dot dot-green"></div>
-          <div class="mockup-title">sistematicos.site — Dashboard Principal (Dark Mode)</div>
+          <div class="mockup-title">
+            <i data-lucide="globe"></i> sistematicos.site — Dashboard Principal (Dark Mode)
+          </div>
         </div>
         <img src="screenshots/02-dashboard-dark.png" alt="Sistemáticos Dashboard" loading="eager" />
       </div>
@@ -396,8 +526,12 @@
         <p class="section-subtitle">Como os 12 módulos do Sistemáticos eliminam as principais dores da rotina acadêmica dos estudantes.</p>
         
         <div class="matrix-grid">
+          <!-- 1. Boletim -->
           <div class="matrix-card">
-            <h3>📊 1. Boletim & Médias</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="graduation-cap"></i></div>
+              1. Boletim & Médias
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Tabelas estáticas sem cálculo, exigindo recarregar a página para trocar de semestre.</p>
@@ -408,8 +542,12 @@
             </div>
           </div>
 
+          <!-- 2. Vida Acadêmica -->
           <div class="matrix-card">
-            <h3>📅 2. Vida Acadêmica</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="calendar"></i></div>
+              2. Vida Acadêmica
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Cronogramas soltos em PDFs e menus fragmentados.</p>
@@ -420,8 +558,12 @@
             </div>
           </div>
 
+          <!-- 3. Financeiro & PIX -->
           <div class="matrix-card">
-            <h3>💳 3. Financeiro & PIX</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="credit-card"></i></div>
+              3. Financeiro & PIX
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Apenas download de PDF com código de barras tradicional.</p>
@@ -432,8 +574,12 @@
             </div>
           </div>
 
+          <!-- 4. Comunicação -->
           <div class="matrix-card">
-            <h3>💬 4. Comunicação em Tempo Real</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="message-square"></i></div>
+              4. Chat em Tempo Real
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Inexistente — nenhum canal interno de interação entre alunos.</p>
@@ -444,8 +590,12 @@
             </div>
           </div>
 
+          <!-- 5. Classroom -->
           <div class="matrix-card">
-            <h3>📚 5. Google Classroom</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="book-open"></i></div>
+              5. Google Classroom
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Aluno precisa alternar entre múltiplos logins e abas.</p>
@@ -456,8 +606,12 @@
             </div>
           </div>
 
+          <!-- 6. Hub Acadêmico -->
           <div class="matrix-card">
-            <h3>🎯 6. Hub Acadêmico & Carreira</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="compass"></i></div>
+              6. Hub Acadêmico & Carreira
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Inexistente.</p>
@@ -468,8 +622,12 @@
             </div>
           </div>
 
+          <!-- 7. Ferramentas ABNT -->
           <div class="matrix-card">
-            <h3>📝 7. Ferramentas & ABNT</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="file-text"></i></div>
+              7. Ferramentas & ABNT
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Formatação manual de capas e trabalhos acadêmicos.</p>
@@ -480,8 +638,12 @@
             </div>
           </div>
 
+          <!-- 8. Tarefas & Kanban -->
           <div class="matrix-card">
-            <h3>📋 8. Tarefas & Kanban</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="check-square"></i></div>
+              8. Tarefas & Kanban
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Dependência de planilhas e aplicativos externos.</p>
@@ -492,8 +654,12 @@
             </div>
           </div>
 
+          <!-- 9. Responsividade PWA -->
           <div class="matrix-card">
-            <h3>📱 9. Responsividade PWA</h3>
+            <h3>
+              <div class="matrix-icon"><i data-lucide="smartphone"></i></div>
+              9. Responsividade PWA
+            </h3>
             <div class="matrix-row">
               <span class="matrix-tag tag-legacy">Legado (JSF)</span>
               <p style="color: var(--text-muted);">Layout quebrado em celular, zoom obrigatório.</p>
@@ -501,6 +667,54 @@
             <div class="matrix-row">
               <span class="matrix-tag tag-modern">Sistemáticos</span>
               <p style="color: var(--text);">PWA instalável, navegação mobile pensada para uso de uma mão e tema escuro nativo.</p>
+            </div>
+          </div>
+
+          <!-- 10. Central de Avisos -->
+          <div class="matrix-card">
+            <h3>
+              <div class="matrix-icon"><i data-lucide="bell"></i></div>
+              10. Avisos & Editais
+            </h3>
+            <div class="matrix-row">
+              <span class="matrix-tag tag-legacy">Legado (JSF)</span>
+              <p style="color: var(--text-muted);">Notificações perdidas em murais desorganizados.</p>
+            </div>
+            <div class="matrix-row">
+              <span class="matrix-tag tag-modern">Sistemáticos</span>
+              <p style="color: var(--text);">Feed em tempo real via WebSocket de avisos institucionais e comunicados de sala.</p>
+            </div>
+          </div>
+
+          <!-- 11. Calendário de Avaliações -->
+          <div class="matrix-card">
+            <h3>
+              <div class="matrix-icon"><i data-lucide="clock"></i></div>
+              11. Calendário de Provas
+            </h3>
+            <div class="matrix-row">
+              <span class="matrix-tag tag-legacy">Legado (JSF)</span>
+              <p style="color: var(--text-muted);">Datas de exames e substitutivas dispersas em documentos avulsos.</p>
+            </div>
+            <div class="matrix-row">
+              <span class="matrix-tag tag-modern">Sistemáticos</span>
+              <p style="color: var(--text);">Contagem regressiva automática com marcadores visuais de urgência (*Hoje*, *Próxima*).</p>
+            </div>
+          </div>
+
+          <!-- 12. Matriz Curricular -->
+          <div class="matrix-card">
+            <h3>
+              <div class="matrix-icon"><i data-lucide="book-marked"></i></div>
+              12. Matriz Curricular
+            </h3>
+            <div class="matrix-row">
+              <span class="matrix-tag tag-legacy">Legado (JSF)</span>
+              <p style="color: var(--text-muted);">Grade curricular estática e de difícil visualização de progresso.</p>
+            </div>
+            <div class="matrix-row">
+              <span class="matrix-tag tag-modern">Sistemáticos</span>
+              <p style="color: var(--text);">Árvore interativa de pré-requisitos, matérias cursadas e horas complementares pendentes.</p>
             </div>
           </div>
         </div>
@@ -515,22 +729,29 @@
 
         <div class="features-grid">
           <div class="feature-card">
-            <h4>🔐 Zero Duplicação de Dados</h4>
+            <div class="feature-icon"><i data-lucide="database"></i></div>
+            <h4>Zero Duplicação de Dados</h4>
             <p>O servidor não armazena notas, faltas ou cadastros acadêmicos. Cada requisição é resolvida ao vivo direto contra o portal institucional oficial via gateway seguro.</p>
           </div>
           <div class="feature-card">
-            <h4>🛡️ Criptografia AES-256-GCM</h4>
+            <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+            <h4>Criptografia AES-256-GCM</h4>
             <p>Credenciais e sessões ativas são cifradas em memória e repouso transitório com autenticação GCM. Sessões expiram após 12h e são purgadas a cada 5 minutos.</p>
           </div>
           <div class="feature-card">
-            <h4>⚡ Express 5 & Socket.IO</h4>
+            <div class="feature-icon"><i data-lucide="zap"></i></div>
+            <h4>Express 5 & Socket.IO</h4>
             <p>80 rotas REST com autorização estrita baseada na sessão (zero trust no cliente) e 22 eventos WebSocket multiplexados por salas de turma.</p>
           </div>
         </div>
 
         <div style="margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap;">
-          <a href="diagramas.html" class="btn-secondary">Explorar Diagramas Técnicos (ER + UML) →</a>
-          <a href="api.html" class="btn-secondary">Ver Referência das 80 Rotas da API →</a>
+          <a href="diagramas.html" class="btn-secondary">
+            <i data-lucide="network"></i> Explorar Diagramas Técnicos (ER + UML) <i data-lucide="arrow-right"></i>
+          </a>
+          <a href="api.html" class="btn-secondary">
+            <i data-lucide="code-2"></i> Ver Referência das 80 Rotas da API <i data-lucide="arrow-right"></i>
+          </a>
         </div>
       </div>
     </section>
@@ -543,19 +764,19 @@
 
         <div class="gallery-grid">
           <div class="gallery-card">
-            <h4>Boletim Acadêmico & Médias</h4>
+            <h4><i data-lucide="graduation-cap"></i> Boletim Acadêmico & Médias</h4>
             <img src="screenshots/04-boletim.png" alt="Boletim Acadêmico" loading="lazy" />
           </div>
           <div class="gallery-card">
-            <h4>Financeiro & PIX</h4>
+            <h4><i data-lucide="credit-card"></i> Financeiro & PIX</h4>
             <img src="screenshots/05-mensalidade.png" alt="Financeiro e Mensalidades" loading="lazy" />
           </div>
           <div class="gallery-card">
-            <h4>Dashboard (Tema Claro)</h4>
+            <h4><i data-lucide="sun"></i> Dashboard (Tema Claro)</h4>
             <img src="screenshots/03-dashboard-light.png" alt="Dashboard Light Mode" loading="lazy" />
           </div>
           <div class="gallery-card">
-            <h4>Mobile PWA (Dashboard & Boletim)</h4>
+            <h4><i data-lucide="smartphone"></i> Mobile PWA (Dashboard & Boletim)</h4>
             <div style="display: flex; gap: 10px; padding: 12px; background: #0c0c0e;">
               <img src="screenshots/07-mobile-dashboard.png" alt="Mobile Dashboard" style="width: 50%; border-radius: 8px;" loading="lazy" />
               <img src="screenshots/08-mobile-boletim.png" alt="Mobile Boletim" style="width: 50%; border-radius: 8px;" loading="lazy" />
@@ -572,13 +793,26 @@
         <p><strong>Sistemáticos</strong> — Projeto de Engenharia de Software por <strong>Murilo Rocha Silva</strong></p>
         <p style="font-size: 0.8rem; margin-top: 4px;">4º Semestre de Sistemas de Informação — UniFEF (Fernandópolis/SP)</p>
       </div>
-      <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-        <a href="mailto:murilosilva@aluno.unifef.edu.br" style="color: var(--accent-light);">murilosilva@aluno.unifef.edu.br</a>
-        <a href="https://github.com/murilolol" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://linkedin.com/in/murilodev" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://instagram.com/muriloodev" target="_blank" rel="noopener">Instagram</a>
+      <div class="social-links">
+        <a href="mailto:murilosilva@aluno.unifef.edu.br" class="social-link" style="color: var(--accent-light);">
+          <i data-lucide="mail"></i> murilosilva@aluno.unifef.edu.br
+        </a>
+        <a href="https://github.com/murilolol" target="_blank" rel="noopener" class="social-link">
+          <i data-lucide="github"></i> GitHub
+        </a>
+        <a href="https://linkedin.com/in/murilodev" target="_blank" rel="noopener" class="social-link">
+          <i data-lucide="linkedin"></i> LinkedIn
+        </a>
+        <a href="https://instagram.com/muriloodev" target="_blank" rel="noopener" class="social-link">
+          <i data-lucide="instagram"></i> Instagram
+        </a>
       </div>
     </div>
   </footer>
+
+  <script>
+    // Inicializa todos os ícones Lucide
+    lucide.createIcons();
+  </script>
 </body>
 </html>
